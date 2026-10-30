@@ -1,0 +1,1093 @@
+<!doctype html>
+<html lang="en-IE">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Building Management Hub</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+[hidden]{display:none!important} body{margin:0}
+/* Layout: sticky header with hazard stripe, single content column (max 1240px), fixed bottom tab bar sized for gloved/greasy thumbs; cards in an auto-fill grid. */
+:root{
+  --bg:#F7F6FF; --surface:#FFFFFF; --surface-2:#F3F2FF; --ink:#1F1A4D; --muted:#5E5A8F; --line:#E3E1F8;
+  --brand:#3C3489; --brand-ink:#ffffff; --brand-soft:#EEEDFE; --step:#534AB7; --adv-ink:#ffffff;
+  --hazard:#534AB7; --hazard-ink:#ffffff; --lav:#CECBF6; --badge:#d6336c; --tab-a:#6A60D6; --tab-b:#3C3489; --hdr-wash:#ECE9FF; --total-hot:#E8408F; --total-bg1:#FFF2F8; --total-bg2:#FFE0EE; --total-line:#F9C3DB; --w-tech:#0F6E56; --w-tech-bg:#E1F5EE; --w-con:#B05A08; --w-con-bg:#FDEEDC; --w-ll:#C2306E; --w-ll-bg:#FCE4EF; --grid:rgba(83,74,183,.10);
+  --danger:#b3261e; --danger-bg:#fbe6e4; --warn:#9a5b00; --warn-bg:#fdf0d9; --ok:#0F6E56;
+  --s-new:#2a65a6; --s-new-bg:#e2ecf7;
+  --s-assigned:#6847ad; --s-assigned-bg:#ece6f7;
+  --s-part:#b05a08; --s-part-bg:#fbeadb;
+  --s-progress:#0a7b70; --s-progress-bg:#dcf1ee;
+  --s-complete:#2b7a3c; --s-complete-bg:#e1f1e4;
+  --c-fire:#c0392b; --c-water:#1f7fa8; --c-lifts:#6847ad; --c-hvac:#0a7b70; --c-elec:#b07a00; --c-fabric:#6b5a48;
+  --shadow:0 1px 2px rgba(60,52,137,.05),0 6px 20px rgba(60,52,137,.08);
+  --f-display:"Plus Jakarta Sans","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --f-body:"Plus Jakarta Sans","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --tap:56px; --radius:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12102A; --surface:#1B1838; --surface-2:#231F47; --ink:#EEEDFE; --muted:#AFA9EC; --line:#332E66;
+  --brand:#3C3489; --brand-ink:#ffffff; --brand-soft:#262256; --step:#9A93EE; --adv-ink:#12102A;
+  --hazard:#9A93EE; --hazard-ink:#14112E; --lav:#CECBF6; --badge:#e0457b; --tab-a:#7d72ea; --tab-b:#4a3fb0; --hdr-wash:#241f52; --grid:rgba(154,147,238,.10); --total-hot:#FF7DBE; --total-bg1:#3a1a33; --total-bg2:#2a1228; --total-line:#5c2a4d; --w-tech:#5DCAA5; --w-tech-bg:#0B2E25; --w-con:#F0A35E; --w-con-bg:#36230f; --w-ll:#FF7DBE; --w-ll-bg:#3a1a33;
+  --danger:#ff8a80; --danger-bg:#3a1d1b; --warn:#f3b65a; --warn-bg:#352812; --ok:#5DCAA5;
+  --s-new:#78aee9; --s-new-bg:#18293b;
+  --s-assigned:#ad95ea; --s-assigned-bg:#251e3a;
+  --s-part:#eb9a50; --s-part-bg:#36230f;
+  --s-progress:#45c6b7; --s-progress-bg:#0f2e2b;
+  --s-complete:#6cc47f; --s-complete-bg:#152d1b;
+  --c-fire:#ff7b6b; --c-water:#5cb8e0; --c-lifts:#ad95ea; --c-hvac:#45c6b7; --c-elec:#e8b844; --c-fabric:#c4ad93;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.28);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#12102A; --surface:#1B1838; --surface-2:#231F47; --ink:#EEEDFE; --muted:#AFA9EC; --line:#332E66;
+  --brand:#3C3489; --brand-ink:#ffffff; --brand-soft:#262256; --step:#9A93EE; --adv-ink:#12102A;
+  --hazard:#9A93EE; --hazard-ink:#14112E; --lav:#CECBF6; --badge:#e0457b; --tab-a:#7d72ea; --tab-b:#4a3fb0; --hdr-wash:#241f52; --grid:rgba(154,147,238,.10); --total-hot:#FF7DBE; --total-bg1:#3a1a33; --total-bg2:#2a1228; --total-line:#5c2a4d; --w-tech:#5DCAA5; --w-tech-bg:#0B2E25; --w-con:#F0A35E; --w-con-bg:#36230f; --w-ll:#FF7DBE; --w-ll-bg:#3a1a33;
+  --danger:#ff8a80; --danger-bg:#3a1d1b; --warn:#f3b65a; --warn-bg:#352812; --ok:#5DCAA5;
+  --s-new:#78aee9; --s-new-bg:#18293b;
+  --s-assigned:#ad95ea; --s-assigned-bg:#251e3a;
+  --s-part:#eb9a50; --s-part-bg:#36230f;
+  --s-progress:#45c6b7; --s-progress-bg:#0f2e2b;
+  --s-complete:#6cc47f; --s-complete-bg:#152d1b;
+  --c-fire:#ff7b6b; --c-water:#5cb8e0; --c-lifts:#ad95ea; --c-hvac:#45c6b7; --c-elec:#e8b844; --c-fabric:#c4ad93;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.28);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45;-webkit-tap-highlight-color:transparent;padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible{outline:3px solid var(--hazard);outline-offset:2px}
+.ic{width:1.3em;height:1.3em;flex:none;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;color:var(--ink);border-bottom:1px solid var(--line);box-shadow:0 8px 24px rgba(60,52,137,.08);
+  background:var(--surface);background:linear-gradient(100deg,color-mix(in srgb,var(--surface) 92%,transparent) 0%,color-mix(in srgb,var(--surface) 92%,transparent) 40%,color-mix(in srgb,var(--hdr-wash) 92%,transparent) 100%);
+  -webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px)}
+.top::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;
+  -webkit-mask-image:linear-gradient(90deg,transparent 35%,#000 100%);mask-image:linear-gradient(90deg,transparent 35%,#000 100%)}
+.top>*{position:relative}
+.top-in{display:flex;align-items:center;gap:14px;padding-block:12px}
+.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(140deg,var(--tab-a),var(--tab-b));color:#fff;display:grid;place-items:center;flex:none;
+  box-shadow:0 8px 20px rgba(83,74,183,.35),inset 0 1px 0 rgba(255,255,255,.3)}
+.logo .ic{width:28px;height:28px}
+.homebtn{display:flex;align-items:center;gap:14px;min-width:0;flex:1;text-align:left;padding:4px 8px 4px 4px;margin-left:-4px;border-radius:18px;transition:background .2s}
+.homebtn:hover{background:color-mix(in srgb,var(--brand-soft) 70%,transparent)}
+.homebtn .logo{transition:transform .25s cubic-bezier(.34,1.5,.5,1)}
+.homebtn:hover .logo{transform:rotate(-6deg) scale(1.05)}
+.homebtn:active .logo{transform:scale(.94)}
+.brandname{min-width:0;flex:1;display:grid;gap:5px}
+.brandname h1{margin:0;font-family:var(--f-display);font-weight:800;font-size:1.35rem;letter-spacing:-.02em;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brandname h1 span{background:linear-gradient(120deg,var(--tab-a),var(--badge));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brandname p{margin:0;display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:.74rem;font-weight:700}
+.hpill{padding:2px 8px;border-radius:999px;background:var(--brand-soft);color:var(--hazard);letter-spacing:.06em;text-transform:uppercase;font-size:.66rem;font-weight:800;border:1px solid var(--line)}
+.hpill.alpha{background:linear-gradient(120deg,var(--tab-a),var(--tab-b));color:#fff;border-color:transparent}
+.hmeta{color:var(--muted);font-weight:600}
+.hstats{display:flex;gap:8px;align-items:center}
+.hs{display:flex;align-items:center;gap:8px;min-height:48px;padding:0 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);font-size:.85rem;color:var(--muted);font-weight:600;transition:transform .15s,box-shadow .2s}
+.hs:hover{transform:translateY(-2px)}
+.hs b{font-size:1.15rem;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.hs .dot{width:10px;height:10px}
+.hs.date{background:transparent;box-shadow:none;border-style:dashed}
+.hs.date .ic{color:var(--hazard)}
+.rolebtn{display:flex;align-items:center;gap:10px;min-height:52px;padding:4px 12px 4px 4px;border-radius:999px;background:var(--surface);color:var(--ink);font-weight:700;border:1px solid var(--line);box-shadow:var(--shadow);transition:box-shadow .2s}
+.rolebtn:hover{box-shadow:0 8px 22px rgba(83,74,183,.22)}
+.ravatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;background:linear-gradient(140deg,var(--tab-a),var(--tab-b));position:relative}
+.ravatar::after{content:"";position:absolute;right:1px;bottom:1px;width:11px;height:11px;border-radius:50%;background:#2fbf71;box-shadow:0 0 0 2px var(--surface)}
+.rolebtn small{display:block;font-size:.64rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.rolebtn span.rtxt{text-align:left;line-height:1.2}
+.rolebtn .chev{color:var(--muted);width:18px;height:18px}
+.stripe{display:none}
+@media (max-width:1180px){.hs.date{display:none}}
+@media (max-width:980px){.hstats{display:none}}
+@media (max-width:560px){.rolebtn .rtxt,.rolebtn .chev{display:none}.rolebtn{padding:4px}.brandname h1{font-size:1.08rem}.hmeta{display:none}.logo{width:40px;height:40px;border-radius:12px}.logo .ic{width:24px;height:24px}}
+
+/* top nav (sticky with header): pill track with a sliding active indicator */
+.tabs{border-top:1px solid var(--line);padding-block:10px}
+.tab-track{position:relative;background:var(--surface-2);border:1px solid var(--line);border-radius:20px;padding:6px;box-shadow:inset 0 1px 3px rgba(60,52,137,.08)}
+.tabs-in{position:relative;z-index:1;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.tab-ind{position:absolute;z-index:0;top:6px;bottom:6px;left:0;width:0;border-radius:15px;background:linear-gradient(135deg,var(--tab-a),var(--tab-b));box-shadow:0 8px 22px rgba(83,74,183,.38),inset 0 1px 0 rgba(255,255,255,.25);opacity:0}
+.tab-ind.ready{opacity:1}
+.tab-ind.anim{transition:transform .38s cubic-bezier(.34,1.3,.5,1),width .38s cubic-bezier(.34,1.3,.5,1)}
+.tab{position:relative;min-height:64px;border-radius:15px;display:flex;align-items:center;justify-content:center;gap:10px;color:var(--muted);font-weight:700;font-size:1rem;transition:color .2s,transform .15s,background .2s}
+.tab .tic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--brand-soft);color:var(--hazard);transition:background .2s,color .2s,transform .25s}
+.tab .ic{width:24px;height:24px}
+.tab:hover{color:var(--ink);background:var(--surface)}
+.tab:hover .tic{transform:translateY(-2px) rotate(-4deg)}
+.tab:active{transform:scale(.96)}
+.tab[aria-current="page"]{color:#fff;background:transparent}
+.tab[aria-current="page"] .tic{background:rgba(255,255,255,.2);color:#fff}
+.tab[aria-current="page"] .lbl{letter-spacing:.01em}
+.tab .badge{min-width:24px;height:24px;border-radius:12px;background:var(--badge);color:#fff;font-weight:800;font-size:.78rem;display:grid;place-items:center;padding:0 7px;font-variant-numeric:tabular-nums;box-shadow:0 0 0 2px var(--surface-2),0 3px 8px rgba(214,51,108,.4)}
+.tab[aria-current="page"] .badge{box-shadow:0 0 0 2px #fff,0 3px 8px rgba(0,0,0,.2)}
+.badge.pop{animation:pop .5s cubic-bezier(.34,1.6,.5,1)}
+@keyframes pop{0%{transform:scale(.4)}100%{transform:scale(1)}}
+@media (max-width:900px){.tab{flex-direction:column;gap:4px;font-size:.8rem;min-height:72px;padding:4px 2px}.tab .tic{width:34px;height:30px;border-radius:10px}.tab .badge{position:absolute;top:2px;right:4px;min-width:20px;height:20px;font-size:.7rem;padding:0 5px}}
+@media (max-width:640px){.tabs{padding-block:8px}.tab-track{padding:4px;border-radius:16px}.tab-ind{top:4px;bottom:4px;border-radius:12px}.tabs-in{gap:2px}.tab{font-size:.7rem;border-radius:12px}.tab .tic{background:transparent}.top-in{padding-block:10px}}
+@media (prefers-reduced-motion:reduce){.tab-ind.anim,.tab,.tab .tic{transition:none}.badge.pop{animation:none}}
+
+/* generic */
+main{padding-block:18px 24px;display:grid;gap:18px}
+.vhead{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px}
+.vhead h2{margin:0;font-family:var(--f-display);font-weight:800;font-size:1.8rem;line-height:1.1;letter-spacing:-.02em;text-wrap:balance}
+.vhead p{margin:4px 0 0;color:var(--muted);max-width:60ch}
+.eyebrow{font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sample{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:var(--warn-bg);color:var(--warn);border:1px dashed currentColor}
+.seg-ctrl{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
+.seg-ctrl button{min-height:52px;padding:0 18px;border-radius:9px;font-weight:600;display:flex;align-items:center;gap:8px;color:var(--muted)}
+.seg-ctrl button[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink)}
+.btn{min-height:var(--tap);padding:0 18px;border-radius:var(--radius);font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-size:1rem}
+.btn-ghost{background:var(--surface);border:1.5px solid var(--line)}
+.btn-brand{background:var(--brand);color:var(--brand-ink)}
+.btn-hazard{background:var(--hazard);color:var(--hazard-ink);box-shadow:0 6px 18px rgba(83,74,183,.28)}
+.btn-danger{background:var(--danger);color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.scroller{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.scroller>*{flex:none}
+.chip{min-height:48px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);font-weight:600;display:inline-flex;align-items:center;gap:8px;font-size:.95rem}
+.chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.chip .n{font-family:var(--f-mono);font-size:.8rem;opacity:.75}
+.schip{color:var(--sc);border-color:var(--sc)}
+.schip[aria-pressed="true"]{background:var(--sc);border-color:var(--sc);color:var(--adv-ink)}
+.chip.rm::after{content:"✕";font-size:.8rem;opacity:.8}
+.empty{padding:32px 20px;text-align:center;color:var(--muted);background:var(--surface);border:1.5px dashed var(--line);border-radius:var(--radius)}
+
+/* stage tiles */
+.tiles{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(5,minmax(0,1fr));gap:10px;align-items:stretch}
+@media (max-width:900px){.tiles{display:flex;overflow-x:auto;padding:4px 2px 8px}.tiles>*{flex:0 0 132px}.tiles>.total{flex-basis:190px}}
+.tiles .tile.total{position:relative;overflow:hidden;color:var(--total-hot);border:1.5px solid var(--total-line);background:linear-gradient(140deg,var(--total-bg1),var(--total-bg2));box-shadow:0 10px 26px rgba(232,64,143,.22);gap:4px;justify-content:flex-start;padding:14px 16px}
+.tiles .tile.total::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:rgba(232,64,143,.07)}
+.tiles .tile.total b,.tiles .tile.total .tl-top,.tiles .tile.total .tl-sub{color:var(--total-hot);font-weight:800;text-shadow:0 0 14px rgba(232,64,143,.35)}
+.tiles .tile.total b{font-size:3.3rem}
+.tiles .tile.total .tl-top{display:flex;align-items:center;gap:6px;font-size:1rem;text-transform:uppercase;letter-spacing:.06em}
+.tiles .tile.total .tl-sub{font-size:1.05rem}
+.tiles .tile.total .tl-bar{display:block;height:9px;border-radius:5px;background:rgba(232,64,143,.18);margin-top:4px;overflow:hidden}
+.tiles .tile.total .tl-bar i{display:block;height:100%;background:var(--total-hot);border-radius:5px;box-shadow:0 0 10px rgba(232,64,143,.6)}
+.tiles .tile.total[aria-pressed="false"]{box-shadow:none}
+.tile{min-height:92px;border-radius:var(--radius);background:var(--surface);border:2px solid transparent;box-shadow:var(--shadow);padding:12px 14px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;color:var(--sc)}
+.tile b{font-family:var(--f-display);font-weight:800;font-size:1.9rem;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink)}
+.tile span{display:flex;align-items:center;gap:6px;font-weight:700;font-size:.9rem}
+.tile[aria-pressed="true"]{border-color:var(--sc);background:var(--sbg)}
+.st-new{--sc:var(--s-new);--sbg:var(--s-new-bg)}
+.st-assigned{--sc:var(--s-assigned);--sbg:var(--s-assigned-bg)}
+.st-part{--sc:var(--s-part);--sbg:var(--s-part-bg)}
+.st-progress{--sc:var(--s-progress);--sbg:var(--s-progress-bg)}
+.st-complete{--sc:var(--s-complete);--sbg:var(--s-complete-bg)}
+
+/* toolbar */
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.toolbar .grow{flex:1}
+.btn-filter{min-height:60px;padding:0 22px;font-size:1.05rem;color:#fff;background:linear-gradient(140deg,var(--tab-a),var(--tab-b));box-shadow:0 8px 20px rgba(83,74,183,.32);transition:transform .15s,box-shadow .2s}
+.btn-filter:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(83,74,183,.4)}
+.btn-filter .ic{width:24px;height:24px}
+.btn-filter .fcount{background:var(--badge);color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.9)}
+.btn-sort{min-height:60px;padding:0 20px;font-size:1.05rem;background:var(--brand-soft);color:var(--hazard);border:2px solid var(--hazard);transition:transform .15s,background .2s}
+.btn-sort:hover{transform:translateY(-2px);background:var(--surface)}
+.btn-sort .ic{width:24px;height:24px}
+.btn-filter:active,.btn-sort:active{transform:scale(.97)}
+.fcount{background:var(--hazard);color:var(--hazard-ink);border-radius:999px;min-width:24px;height:24px;font-size:.8rem;display:grid;place-items:center;padding:0 6px}
+
+/* site bar */
+.sitesec{display:grid;gap:8px}
+.sitesec .crew-h{flex-wrap:wrap}
+.sitesec .crew-h .scroller{gap:6px;max-width:100%}
+.cchip{min-height:44px;padding:0 14px;font-size:.88rem}
+.cchip .ic{width:16px;height:16px}
+.sitebar{padding:2px 2px 6px}
+.sitebtn{display:flex;align-items:center;gap:10px;min-height:66px;padding:8px 12px 8px 8px;border-radius:16px;background:var(--surface);border:1.5px solid var(--line);box-shadow:var(--shadow);text-align:left;transition:transform .15s,border-color .2s}
+.sitebtn:hover{transform:translateY(-2px);border-color:var(--hazard)}
+.sitebtn .sbic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--brand-soft);color:var(--hazard);flex:none}
+.sitebtn .sbic .ic{width:24px;height:24px}
+.sitebtn .sbt{display:grid;line-height:1.2}
+.sitebtn .sbt b{font-weight:800;white-space:nowrap}
+.sitebtn .sbt small{color:var(--muted);font-weight:600;font-size:.8rem}
+.sitebtn .sbn{min-width:30px;height:30px;padding:0 8px;border-radius:15px;display:grid;place-items:center;background:var(--brand-soft);color:var(--hazard);font-weight:800;font-variant-numeric:tabular-nums}
+.sitebtn[aria-pressed="true"]{background:linear-gradient(140deg,var(--tab-a),var(--tab-b));border-color:transparent;color:#fff;box-shadow:0 8px 22px rgba(83,74,183,.35)}
+.sitebtn[aria-pressed="true"] .sbic,.sitebtn[aria-pressed="true"] .sbn{background:rgba(255,255,255,.2);color:#fff}
+.sitebtn[aria-pressed="true"] .sbt small{color:rgba(255,255,255,.85)}
+
+/* pipeline status row */
+.tiles.pipe{display:flex;align-items:stretch;gap:6px}
+.tiles.pipe .tile.total{flex:0 0 210px}
+.pchev{flex:0 0 auto;display:grid;place-items:center;color:var(--muted);opacity:.7}
+.pchev .ic{width:22px;height:22px}
+.pstep{flex:1 1 0;min-width:0;min-height:104px;border-radius:14px;background:var(--sbg);color:var(--sc);border:2px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;padding:10px 6px;transition:transform .15s,background .2s}
+.pstep:hover{transform:translateY(-2px);border-color:var(--sc)}
+.pstep .pic2 .ic{width:24px;height:24px}
+.pstep b{font-family:var(--f-display);font-size:2rem;font-weight:800;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.pstep .pl{font-size:.85rem;font-weight:700;line-height:1.15}
+.pstep[aria-pressed="true"]{background:var(--sc);color:var(--adv-ink);box-shadow:0 8px 20px rgba(60,52,137,.18)}
+@media (max-width:900px){.tiles.pipe{overflow-x:auto;padding:4px 2px 8px}.tiles.pipe .tile.total{flex:0 0 180px}.tiles.pipe .pstep{flex:0 0 104px}.tiles.pipe .pchev{flex:0 0 auto}}
+.no-dl .exportbtn{display:none}
+
+/* crew strip */
+.crew{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 14px;display:grid;gap:10px}
+.crew-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.crewcard{min-height:64px;border-radius:10px;border:1.5px solid var(--line);padding:8px 12px;display:flex;align-items:center;gap:10px;text-align:left;background:var(--surface-2)}
+.av{width:40px;height:40px;border-radius:50%;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center;font-weight:700;font-size:.9rem;flex:none;letter-spacing:.02em}
+.av.sm{width:32px;height:32px;font-size:.78rem}
+.crewcard .who{font-weight:700;line-height:1.1}
+.crewcard .what{font-size:.8rem;color:var(--muted);display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--sc);display:inline-block}
+
+/* job cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,350px),1fr));gap:14px;align-items:start}
+.job{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--line);display:grid;overflow:hidden}
+.job-main{padding:14px 16px 12px;display:grid;gap:10px;text-align:left;width:100%}
+.job-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ref{font-family:var(--f-mono);font-size:.82rem;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:999px;background:var(--sbg);color:var(--sc);font-weight:700;font-size:.85rem}
+.age{margin-left:auto;display:inline-flex;align-items:center;gap:5px;font-size:.85rem;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.age.warn{color:var(--warn)} .age.bad{color:var(--danger)}
+.job h3{margin:0;font-size:1.15rem;line-height:1.25;text-wrap:balance}
+.where{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.92rem}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:.8rem;font-weight:600;padding:4px 9px;border-radius:6px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted)}
+.tag.ll{color:var(--ink);border-color:var(--ink)}
+.tag.con{background:var(--hazard);border-color:var(--hazard);color:var(--hazard-ink)}
+.tag.urgent{background:var(--danger-bg);color:var(--danger);border-color:transparent}
+.prog{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
+.prog i{height:8px;border-radius:2px;background:var(--line)}
+.prog i.on{background:var(--sc)}
+.prog i.skip{background:repeating-linear-gradient(-45deg,var(--line) 0 3px,transparent 3px 6px)}
+.prog-l{display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-top:-4px}
+.job-foot{display:flex;align-items:center;gap:10px;padding:10px 12px 12px 16px;border-top:1px solid var(--line);background:var(--surface-2)}
+.job-foot .tech{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+.job-foot .tech b{display:block;font-size:.92rem;line-height:1.1}
+.job-foot .tech small{color:var(--muted);font-size:.78rem}
+.acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.adv{min-height:var(--tap);padding:0 16px;border-radius:var(--radius);background:var(--sc);color:var(--adv-ink);font-weight:700;display:inline-flex;align-items:center;gap:8px}
+.adv.alt{background:var(--sbg);color:var(--sc);border:2px solid var(--sc)}
+.done-note{display:flex;align-items:center;gap:6px;color:var(--s-complete);font-weight:700;font-size:.9rem}
+
+/* calendar */
+.cal{background:var(--surface);border-radius:12px;box-shadow:var(--shadow);border:1px solid var(--line);overflow:hidden}
+.cal-h{display:flex;align-items:center;gap:10px;padding:12px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.cal-h h3{margin:0;font-family:var(--f-display);font-weight:800;font-size:1.4rem;letter-spacing:-.015em;flex:1;min-width:150px}
+.iconbtn{width:var(--tap);height:var(--tap);border-radius:var(--radius);border:1.5px solid var(--line);display:grid;place-items:center;background:var(--surface)}
+.iconbtn .ic{width:26px;height:26px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.cal-dow{padding:8px 6px;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--surface-2);border-bottom:1px solid var(--line)}
+.cday{min-height:86px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:6px;text-align:left;display:flex;flex-direction:column;gap:4px;align-items:stretch}
+.cday:nth-child(7n){border-right:0}
+.cday .d{font-weight:700;font-variant-numeric:tabular-nums;font-size:.95rem;width:28px;height:28px;display:grid;place-items:center;border-radius:50%}
+.cday.out{background:var(--surface-2);color:var(--muted)}
+.cday.today .d{background:var(--hazard);color:var(--hazard-ink)}
+.cday.sel{box-shadow:inset 0 0 0 3px var(--brand)}
+.cday .bars{display:flex;flex-direction:column;gap:3px}
+.cday .bar{height:6px;border-radius:3px;background:var(--cc)}
+.cday .more{font-size:.72rem;color:var(--muted);font-weight:600}
+@media (min-width:900px){.cday{min-height:104px}.cday .bar{height:auto;padding:2px 6px;font-size:.72rem;color:var(--surface);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+.legend{display:flex;flex-wrap:wrap;gap:12px;padding:10px 12px;border-top:1px solid var(--line);font-size:.82rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:3px;background:var(--cc)}
+.cat-fire{--cc:var(--c-fire)} .cat-water{--cc:var(--c-water)} .cat-lifts{--cc:var(--c-lifts)} .cat-hvac{--cc:var(--c-hvac)} .cat-elec{--cc:var(--c-elec)} .cat-fabric{--cc:var(--c-fabric)}
+.typesum{background:var(--surface);border-radius:12px;box-shadow:var(--shadow);border:1px solid var(--line);padding:12px 14px;display:grid;gap:10px}
+.typetiles{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+@media (max-width:1000px){.typetiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:480px){.typetiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.ttile{position:relative;min-height:72px;border-radius:10px;border:2px solid var(--line);background:var(--surface-2);display:flex;align-items:center;gap:10px;padding:10px 10px 14px;text-align:left;overflow:hidden}
+.ttile .pic{width:40px;height:40px;border-radius:8px;display:grid;place-items:center;background:var(--cc);color:var(--surface);flex:none}
+.ttile .tt{min-width:0;display:grid;line-height:1.15}
+.ttile b{font-family:var(--f-display);font-weight:800;font-size:1.45rem;line-height:1;font-variant-numeric:tabular-nums}
+.ttile .tt span{font-size:.82rem;font-weight:600;color:var(--muted)}
+.ttile .tbar{position:absolute;left:0;bottom:0;height:5px;width:var(--w);background:var(--cc)}
+.ttile[aria-pressed="true"]{border-color:var(--cc);background:var(--surface)}
+.ttile[aria-pressed="true"] .tt span{color:var(--ink)}
+.ttile.dim{opacity:.55}
+.cal-wrap{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:1050px){.typesum{background:var(--surface);border-radius:12px;box-shadow:var(--shadow);border:1px solid var(--line);padding:12px 14px;display:grid;gap:10px}
+.typetiles{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+@media (max-width:1000px){.typetiles{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:480px){.typetiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.ttile{position:relative;min-height:72px;border-radius:10px;border:2px solid var(--line);background:var(--surface-2);display:flex;align-items:center;gap:10px;padding:10px 10px 14px;text-align:left;overflow:hidden}
+.ttile .pic{width:40px;height:40px;border-radius:8px;display:grid;place-items:center;background:var(--cc);color:var(--surface);flex:none}
+.ttile .tt{min-width:0;display:grid;line-height:1.15}
+.ttile b{font-family:var(--f-display);font-weight:800;font-size:1.45rem;line-height:1;font-variant-numeric:tabular-nums}
+.ttile .tt span{font-size:.82rem;font-weight:600;color:var(--muted)}
+.ttile .tbar{position:absolute;left:0;bottom:0;height:5px;width:var(--w);background:var(--cc)}
+.ttile[aria-pressed="true"]{border-color:var(--cc);background:var(--surface)}
+.ttile[aria-pressed="true"] .tt span{color:var(--ink)}
+.ttile.dim{opacity:.55}
+.cal-wrap{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);align-items:start}}
+.daylist{background:var(--surface);border-radius:12px;box-shadow:var(--shadow);border:1px solid var(--line);padding:14px;display:grid;gap:10px}
+.daylist h4{margin:0;font-family:var(--f-display);font-weight:800;font-size:1.2rem}
+.ppm{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;padding:10px 0;border-top:1px solid var(--line)}
+.ppm .pic{width:40px;height:40px;border-radius:8px;display:grid;place-items:center;background:var(--cc);color:var(--surface);grid-row:span 2}
+.ppm b{line-height:1.2}
+.ppm small{color:var(--muted)}
+.ppm .whochips{grid-column:2;display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+.ppm .pic{grid-row:span 3}
+.whochip{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;font-weight:800;padding:4px 10px;border-radius:999px;background:var(--wbg);color:var(--wc)}
+.whochip .ic{width:15px;height:15px}
+.who-all{--wc:var(--hazard);--wbg:var(--brand-soft)}
+.who-warn{--wc:var(--warn);--wbg:var(--warn-bg)}
+.who-bad{--wc:var(--danger);--wbg:var(--danger-bg)}
+.typetiles.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:700px){.typetiles.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.grp-h .gpic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--cc);color:var(--surface)}
+.grp-h .gpic .ic{width:20px;height:20px}
+.who-tech{--wc:var(--w-tech);--wbg:var(--w-tech-bg)}
+.who-con{--wc:var(--w-con);--wbg:var(--w-con-bg)}
+.who-ll{--wc:var(--w-ll);--wbg:var(--w-ll-bg)}
+.kpi.who{display:flex;align-items:center;gap:12px;text-align:left;width:100%;border:2px solid transparent;transition:transform .15s,border-color .2s}
+.kpi.who:hover{transform:translateY(-2px)}
+.kpi.who .kic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--wbg);color:var(--wc);flex:none}
+.kpi.who .kic .ic{width:26px;height:26px}
+.kpi.who .ktx{min-width:0;display:grid}
+.kpi.who b{color:var(--wc)}
+.kpi.who span span{color:var(--ink)}
+.kpi.who[aria-pressed="true"]{border-color:var(--wc);background:var(--wbg)}
+.kpi.who[aria-pressed="true"] .kic{background:var(--wc);color:var(--surface)}
+
+/* landlord */
+.ll-card{background:var(--surface);border-radius:12px;box-shadow:var(--shadow);border:1px solid var(--line);padding:14px 16px;display:grid;gap:12px}
+.ll-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px;font-size:.9rem}
+.ll-meta dt{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.ll-meta dd{margin:0;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.lsteps{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.lsteps div{font-size:.72rem;font-weight:700;color:var(--muted);display:grid;gap:4px}
+.lsteps div i{height:8px;border-radius:2px;background:var(--line)}
+.lsteps div.on{color:var(--ink)} .lsteps div.on i{background:var(--step)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:700px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 14px}
+.kpi b{display:block;font-family:var(--f-display);font-weight:800;font-size:1.8rem;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.kpi span{font-size:.85rem;color:var(--muted);font-weight:600}
+.kpi.warn b{color:var(--warn)} .kpi.bad b{color:var(--danger)}
+.grp-h{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:800;font-size:1.15rem;margin:4px 0 -4px}
+
+/* docs */
+.rolebar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--brand-soft);border-radius:var(--radius);padding:10px 14px}
+.rolebar .grow{flex:1;min-width:200px}
+.doclist{display:grid;gap:8px}
+.doc{width:100%;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;min-height:72px}
+.ftype{width:48px;height:56px;border-radius:4px 12px 4px 4px;display:grid;place-items:end center;padding-bottom:6px;font-family:var(--f-mono);font-size:.7rem;font-weight:500;color:#fff;background:var(--ft)}
+.ft-pdf{--ft:#b3261e} .ft-dwg{--ft:#1f6fa8} .ft-xlsx{--ft:#2b7a3c} .ft-docx{--ft:#2a4f9a}
+.doc b{display:block;line-height:1.25}
+.doc .dm{font-size:.82rem;color:var(--muted);display:flex;gap:6px 12px;flex-wrap:wrap;margin-top:3px}
+.doc.locked{background:var(--surface-2)}
+.doc.locked b{color:var(--muted)}
+.doc.locked .ftype{filter:grayscale(1);opacity:.5}
+.acc{display:inline-flex;align-items:center;gap:5px;font-size:.75rem;font-weight:700;padding:4px 8px;border-radius:6px;white-space:nowrap}
+.acc-all{background:var(--s-complete-bg);color:var(--s-complete)}
+.acc-ops{background:var(--s-new-bg);color:var(--s-new)}
+.acc-fm{background:var(--warn-bg);color:var(--warn)}
+.acc-head{background:var(--danger-bg);color:var(--danger)}
+.overdue{color:var(--danger);font-weight:700}
+
+/* sheet */
+.sheet-back{position:fixed;inset:0;z-index:40;background:rgba(10,16,22,.5);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--bg);width:100%;max-width:760px;max-height:92%;overflow:auto;border-radius:18px 18px 0 0;padding:0 0 calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(0,0,0,.25)}
+.sheet-h{position:sticky;top:0;z-index:2;background:var(--bg);display:flex;align-items:center;gap:10px;padding:14px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));border-bottom:1px solid var(--line)}
+.sheet-h h3{margin:0;flex:1;font-family:var(--f-display);font-weight:800;font-size:1.3rem;letter-spacing:-.015em;line-height:1.1;min-width:0}
+.sheet-b{padding:14px max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px));display:grid;gap:16px}
+.fgroup{display:grid;gap:8px}
+.fgroup .chips{display:flex;flex-wrap:wrap;gap:8px}
+.tl{display:grid;gap:0}
+.tl-i{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;position:relative;padding-bottom:14px}
+.tl-i::before{content:"";position:absolute;left:21px;top:44px;bottom:0;width:2px;background:var(--line)}
+.tl-i:last-child::before{display:none}
+.tl-i .c{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--surface);border:2px solid var(--line);color:var(--muted)}
+.tl-i.on .c{background:var(--sc);border-color:var(--sc);color:var(--surface)}
+.tl-i.skip .c{border-style:dashed}
+.tl-i b{display:block;padding-top:4px}
+.tl-i small{color:var(--muted)}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr));gap:10px}
+.kv div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.kv dt{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.kv dd{margin:2px 0 0;font-weight:600}
+.notice{display:flex;gap:10px;align-items:flex-start;background:var(--warn-bg);color:var(--warn);padding:12px 14px;border-radius:var(--radius);font-weight:600}
+.notice.lock{background:var(--danger-bg);color:var(--danger)}
+.roleopt{display:flex;align-items:center;gap:12px;min-height:72px;padding:10px 14px;border-radius:var(--radius);border:2px solid var(--line);background:var(--surface);text-align:left;width:100%}
+.roleopt[aria-pressed="true"]{border-color:var(--brand);background:var(--brand-soft)}
+.roleopt small{display:block;color:var(--muted);font-size:.85rem}
+.rpt .av{background:var(--w-tech-bg);color:var(--w-tech)}
+.rpt .rdl{width:26px;height:26px;color:var(--hazard)}
+.vhead .exportbtn{flex:none}
+
+/* toast */
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:50;background:var(--ink);color:var(--bg);border-radius:12px;padding:8px 8px 8px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 24px rgba(0,0,0,.25);max-width:calc(100% - 32px);font-weight:600}
+.toast button{min-height:48px;padding:0 16px;border-radius:9px;background:var(--hazard);color:var(--hazard-ink);font-weight:700;display:flex;align-items:center;gap:6px}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:up .22s ease-out}@keyframes up{from{transform:translateY(30px);opacity:.6}}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap top-in">
+    <button class="homebtn" data-act="home" aria-label="Building Management Hub. Go to Helpdesk home">
+    <div class="logo" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M3 21V9l7-5 7 5v3"/><path d="M7 21v-6h4"/><path d="M15.5 13.2a3.2 3.2 0 0 0 4.2 4.2l-3.6 3.6-2-2 3.6-3.6"/><path d="M1.5 21h10"/></svg></div>
+    <div class="brandname"><h1>Building Management <span>Hub</span></h1>
+      <p><span class="hpill alpha">Alpha</span><span class="hpill">Sample data</span><span class="hmeta">6 sites · Ireland</span></p></div>
+    </button>
+    <div class="hstats" id="hstats"></div>
+    <button class="rolebtn" data-act="role" id="rolebtn"></button>
+  </div>
+  <nav class="tabs" aria-label="Views"><div class="wrap"><div class="tab-track"><span class="tab-ind" id="tabind" aria-hidden="true"></span><div class="tabs-in" id="tabs"></div></div></div></nav>
+  <div class="stripe"></div>
+</header>
+<main class="wrap" id="app"></main>
+<div class="sheet-back" id="sheet" hidden><div class="sheet" role="dialog" aria-modal="true" id="sheetbox"></div></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- Config (white-label: swap this block for another client) ---------- */
+const ORG={name:"Facilities Management",country:"Ireland"};
+const SITES=[
+ {id:"HP",name:"Harbour Point",area:"Dublin 2",county:"Dublin",fm:"fm1",tech:"t1",landlord:"Liffey Quay Properties Ltd",agent:"Hennessy Property Management"},
+ {id:"SP",name:"Sandyford Park",area:"Dublin 18",county:"Dublin",fm:"fm2",tech:"t2",landlord:"Three Rock Estates DAC",agent:"Hennessy Property Management"},
+ {id:"QH",name:"Quayside House",area:"Cork",county:"Cork",fm:"fm3",tech:"t3",landlord:"Lee Valley Real Estate",agent:"Southern Asset Management"},
+ {id:"EG",name:"Eyre Gate",area:"Galway",county:"Galway",fm:"fm4",tech:"t4",landlord:"Corrib Property Partners",agent:"Western Property Services"},
+ {id:"RV",name:"Riverview",area:"Limerick",county:"Limerick",fm:"fm5",tech:"t5",landlord:"Shannon Commercial Holdings",agent:"Southern Asset Management"},
+ {id:"MQ",name:"Merchants Quay",area:"Waterford",county:"Waterford",fm:"fm6",tech:"t6",landlord:"Suir Investments Ltd",agent:"Déise Estate Agents"}
+];
+const FMS={fm1:"Siobhán Kelly",fm2:"Conor Walsh",fm3:"Aoife Murphy",fm4:"Niamh Brennan",fm5:"Declan Ryan",fm6:"Gráinne Power"};
+const TECHS={t1:{name:"Darragh Byrne",site:"HP"},t2:{name:"Ciarán Doyle",site:"SP"},t3:{name:"Liam O'Sullivan",site:"QH"},t4:{name:"Pádraig Joyce",site:"EG"},t5:{name:"Seán Hayes",site:"RV"},t6:{name:"Eoin Phelan",site:"MQ"}};
+const HELPDESK=["Emma Nolan","Rachel Quinn","Tomás Kearney"];
+const CHANNELS={helpdesk:{l:"Helpdesk",i:"headset"},teams:{l:"Teams",i:"chat"},email:{l:"Email",i:"mail"},phone:{l:"Call",i:"phone"},person:{l:"In person",i:"person"}};
+const STAGES=[
+ {id:"new",l:"New",i:"inbox"},{id:"assigned",l:"Assigned",i:"userCheck"},{id:"part",l:"Part required",i:"box"},
+ {id:"progress",l:"In progress",i:"wrench"},{id:"complete",l:"Complete",i:"check"}];
+const SIDX=Object.fromEntries(STAGES.map((s,i)=>[s.id,i]));
+const AGES=[{id:"0",l:"Today",min:0,max:0},{id:"1-3",l:"1–3 days",min:1,max:3},{id:"4-7",l:"4–7 days",min:4,max:7},{id:"8-14",l:"8–14 days",min:8,max:14},{id:"15+",l:"Over 14 days",min:15,max:9999}];
+const LL_STEPS=["Reported","Acknowledged","Works scheduled","Resolved"];
+const ROLES={helpdesk:{l:"Helpdesk assistant",s:"Logs and routes requests",acc:["all"]},tech:{l:"Operations technician",s:"Works on assigned jobs",acc:["all","ops"]},fm:{l:"Facilities manager",s:"Manages a site",acc:["all","ops","fm"]},head:{l:"Head of FM",s:"Full access, incl. strictly confidential",acc:["all","ops","fm","head"]}};
+const ACCESS={all:{l:"Everyone",i:"shield"},ops:{l:"Technicians & FMs",i:"hardhat"},fm:{l:"Confidential · FMs",i:"lock"},head:{l:"Strictly confidential",i:"lock"}};
+
+/* ---------- Icons ---------- */
+const I={
+ inbox:'<path d="M3 13h5l1.5 3h5l1.5-3h5"/><path d="M5.5 5h13L21 13v6H3v-6z"/>',
+ userCheck:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.5-3.5 3-5.5 6.5-5.5s6 2 6.5 5.5"/><path d="m16 11 2 2 4-4"/>',
+ box:'<path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/>',
+ wrench:'<path d="M14.5 6.5a4 4 0 0 0-5.3 5.3L3.5 17.5l3 3 5.7-5.7a4 4 0 0 0 5.3-5.3l-2.6 2.6-2.4-.6-.6-2.4z"/>',
+ check:'<circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/>',
+ building:'<path d="M4 21V5l8-2v18M12 21V8l8 3v10"/><path d="M2 21h20M7 8h2M7 12h2M7 16h2M15 13h2M15 17h2"/>',
+ calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+ list:'<path d="M9 6h12M9 12h12M9 18h12"/><path d="M4 6h.01M4 12h.01M4 18h.01" stroke-width="3"/>',
+ doc:'<path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/>',
+ lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+ key:'<circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M17 6l3 3M15 8l2 2"/>',
+ phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
+ mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+ chat:'<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
+ headset:'<path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="1"/><rect x="17" y="14" width="4" height="6" rx="1"/>',
+ person:'<circle cx="12" cy="7" r="3.5"/><path d="M5 21c.5-4.5 3-7 7-7s6.5 2.5 7 7"/>',
+ hardhat:'<path d="M3 17h18v2.5H3z"/><path d="M5 17a7 7 0 0 1 14 0"/><path d="M10 11V6.5h4V11"/>',
+ filter:'<path d="M3 5h18l-7 8v6l-4 2v-8z"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ pin:'<path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/>',
+ prev:'<path d="M15 5l-7 7 7 7"/>', next:'<path d="m9 5 7 7-7 7"/>', close:'<path d="M6 6l12 12M18 6 6 18"/>',
+ undo:'<path d="M9 7 4 12l5 5"/><path d="M4 12h11a5 5 0 0 1 0 10h-3"/>',
+ shield:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/>',
+ chev:'<path d="m6 9 6 6 6-6"/>',
+ download:'<path d="M12 4v11M7 10l5 5 5-5"/><path d="M4 17v3h16v-3"/>',
+ sheet:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/>',
+ sort:'<path d="M7 4v16M3 16l4 4 4-4M17 20V4M13 8l4-4 4 4"/>',
+ bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/>',
+ fire:'<path d="M12 21c-4 0-6.5-2.7-6.5-6 0-4 4-6 4-11 3 2 9 6 9 11 0 3.3-2.5 6-6.5 6z"/>',
+ water:'<path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/>',
+ lifts:'<rect x="5" y="3" width="14" height="18" rx="1"/><path d="M12 3v18M7.5 10 9 8l1.5 2M13.5 14l1.5 2 1.5-2"/>',
+ hvac:'<circle cx="12" cy="12" r="2"/><path d="M12 10c0-4 1-7 4-7 2 0 2 3-1 6M14 12c4 0 7 1 7 4 0 2-3 2-6-1M12 14c0 4-1 7-4 7-2 0-2-3 1-6M10 12c-4 0-7-1-7-4 0-2 3-2 6 1"/>',
+ elec:'<path d="M13 3 5 14h6l-1 7 8-11h-6z"/>',
+ fabric:'<path d="M3 11 12 4l9 7M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>',
+ reset:'<path d="M4 4v6h6"/><path d="M5 15a8 8 0 1 0 2-8.5L4 10"/>'
+};
+const ic=(n,c="")=>`<svg class="ic ${c}" viewBox="0 0 24 24" aria-hidden="true">${I[n]||""}</svg>`;
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const DAY=864e5, HOUR=36e5;
+const site=id=>SITES.find(s=>s.id===id);
+const initials=n=>n.split(/\s+/).map(p=>p.replace(/^O'/,"")[0]).slice(0,2).join("").toUpperCase();
+const first=n=>n.split(" ")[0];
+const ageDays=ts=>Math.max(0,Math.floor((Date.now()-ts)/DAY));
+const ageTxt=ts=>{const d=ageDays(ts);return d===0?"Today":d===1?"1 day":d+" days"};
+const fDate=ts=>new Date(ts).toLocaleDateString("en-IE",{day:"numeric",month:"short",year:"numeric"});
+const fDT=ts=>new Date(ts).toLocaleString("en-IE",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
+
+/* ---------- Sample jobs (14) ---------- */
+const RAW=[
+ {id:"BMH-2041",title:"Boiling-water tap leaking under sink",site:"HP",loc:"Level 4 · East kitchen",detail:"Steady drip from the under-sink boiler unit, cupboard base swollen. Water isolated at local valve by staff. Check compression fittings and replace washer; inspect cupboard for damp.",stage:"progress",ch:"teams",resp:"Tenant",con:null,pri:"High",age:2,by:0},
+ {id:"BMH-2042",title:"Lift 2 stopping between floors 3 and 4",site:"HP",loc:"Core B · Passenger lift 2",detail:"Two reports of lift stalling mid-floor this morning. Lift taken out of service and signage placed. Landlord's lift contractor on call-out; tenant to keep Lift 1 available for accessibility.",stage:"assigned",ch:"phone",resp:"Landlord",con:"Apex Lift Services",pri:"Urgent",age:1,by:1,
+  ll:{cat:"Lifts",clause:"Lease cl. 5.2 · Landlord repairs lifts & common plant",agentRef:"HPM-LFT-3318",status:1,chases:[0.2]}},
+ {id:"BMH-2043",title:"Meeting room screen flickering",site:"SP",loc:"Level 2 · Meeting room 2.07",detail:"Wall display flickers on HDMI input from the table box. Test with spare cable, reseat wall-plate connection. If panel fault, raise with AV supplier under warranty.",stage:"new",ch:"helpdesk",resp:"Tenant",con:null,pri:"Normal",age:0,by:2},
+ {id:"BMH-2044",title:"Main entrance auto door sticking open",site:"SP",loc:"Ground floor · Main reception",detail:"Sliding door hesitates and sticks half open in the afternoon. Contractor diagnosed worn operator gearbox; replacement on order. Door set to manual-open with sign in the meantime.",stage:"part",ch:"person",resp:"Landlord",con:"Entrematic Door Services",pri:"High",age:9,by:0,via:true,part:"Door operator gearbox (ES200)",
+  ll:{cat:"Entrances & reception",clause:"Lease cl. 5.2 · Common parts & entrances",agentRef:"HPM-DR-1187",status:2,chases:[6,3]}},
+ {id:"BMH-2045",title:"Water stain on ceiling tile after rain",site:"QH",loc:"Level 1 · Open plan, grid C4",detail:"Brown stain spreading on two ceiling tiles by the north window line after heavy rain. Bucket placed, area cordoned. Suspected roof outlet or flashing failure above.",stage:"assigned",ch:"email",resp:"Landlord",con:"Munster Roofing Ltd",pri:"High",age:5,by:1,
+  ll:{cat:"Roof & fabric",clause:"Lease cl. 5.1 · Structure, roof & external envelope",agentRef:"SAM-QH-0942",status:0,chases:[3,1]}},
+ {id:"BMH-2046",title:"Hand dryer not working",site:"QH",loc:"Level 3 · Male WC",detail:"Hand dryer dead, no power at unit. Spur fused and tested OK; motor failed. Replacement unit ordered from supplier.",stage:"part",ch:"helpdesk",resp:"Tenant",con:null,pri:"Low",age:12,by:2,via:true,part:"Dyson Airblade replacement unit"},
+ {id:"BMH-2047",title:"Zone 4 offices too cold",site:"EG",loc:"Level 2 · West wing, zone 4",detail:"Staff reporting 17°C in the morning. BMS shows zone 4 valve commanded open but low flow. HVAC contractor investigating; likely seized actuator on landlord's central plant.",stage:"progress",ch:"teams",resp:"Landlord",con:"Atlantic HVAC Services",pri:"High",age:6,by:0,
+  ll:{cat:"Heating & HVAC",clause:"Lease cl. 5.3 · Central heating & ventilation plant",agentRef:"WPS-EG-2210",status:2,chases:[4]}},
+ {id:"BMH-2048",title:"LED lights out in car park bays",site:"EG",loc:"Basement · Car park bays 12–18",detail:"Three LED battens out. Replaced fittings, tested emergency function on adjacent units. Closed and photos added.",stage:"complete",ch:"email",resp:"Tenant",con:null,pri:"Normal",age:15,by:1},
+ {id:"BMH-2049",title:"Roller blind broken",site:"RV",loc:"Level 1 · Office 1.12",detail:"Chain mechanism snapped, blind stuck fully down. Low sun in afternoons. Check for spare chain kit in stores before ordering.",stage:"new",ch:"phone",resp:"Tenant",con:null,pri:"Low",age:3,by:2},
+ {id:"BMH-2050",title:"Dishwasher not draining",site:"RV",loc:"Level 2 · Staff kitchen",detail:"Standing water after cycle. Filter cleared once by staff, issue returned. Check drain pump and sump for blockage.",stage:"progress",ch:"helpdesk",resp:"Tenant",con:null,pri:"Normal",age:1,by:0},
+ {id:"BMH-2051",title:"Cracked floor tiles at reception · trip hazard",site:"MQ",loc:"Ground floor · Reception lobby",detail:"Three porcelain tiles cracked and lifting by the visitor desk. Area coned off. Landlord to arrange flooring contractor; tenant to log on hazard register.",stage:"assigned",ch:"person",resp:"Landlord",con:"Premier Tiling & Flooring",pri:"High",age:18,by:1,
+  ll:{cat:"Entrances & reception",clause:"Lease cl. 5.2 · Common parts & reception",agentRef:"DEA-MQ-0571",status:1,chases:[14,9,4]}},
+ {id:"BMH-2052",title:"Comms room air con high-temperature alarm",site:"MQ",loc:"Level 3 · Comms room",detail:"Room hit 29°C overnight. Contractor attended, regassed split unit and cleared condensate pump. Temperature stable at 21°C. Monitor for 7 days.",stage:"complete",ch:"phone",resp:"Tenant",con:"Atlantic HVAC Services",pri:"Urgent",age:4,by:2},
+ {id:"BMH-2053",title:"Floor box socket tripping",site:"HP",loc:"Level 6 · Desk bank F12",detail:"Floor box under desk F12 trips RCD when monitor arm power supply plugged in. Isolate, test circuit and check the PSU. Relocate user to F14 in meantime.",stage:"new",ch:"teams",resp:"Tenant",con:null,pri:"Normal",age:0,by:0},
+ {id:"BMH-2054",title:"Heating boiler lockout fault",site:"SP",loc:"Roof · Plant room",detail:"Boiler 2 in repeated lockout (ignition fault). Boiler 1 carrying load. Contractor confirmed failed ignition PCB; part on 10-day lead time from manufacturer.",stage:"part",ch:"email",resp:"Landlord",con:"Atlantic HVAC Services",pri:"High",age:22,by:1,via:true,part:"Ignition control PCB",
+  ll:{cat:"Heating & HVAC",clause:"Lease cl. 5.3 · Central heating & ventilation plant",agentRef:"HPM-HTG-2903",status:2,chases:[18,11,5,1]}}
+];
+function seed(){
+ const n=Date.now();
+ return RAW.map((r,i)=>{
+  const created=n-r.age*DAY-(2+i%5)*HOUR;
+  const path=["new","assigned"]; if(r.via)path.push("part"); path.push("progress","complete");
+  const upto=path.indexOf(r.stage);
+  const hist=[];
+  for(let k=0;k<=upto;k++){hist.push({s:path[k],at:k===0?created:created+(n-created)*(k/(upto+1))})}
+  const s=site(r.site);
+  return {id:r.id,title:r.title,site:r.site,loc:r.loc,detail:r.detail,stage:r.stage,ch:r.ch,resp:r.resp,con:r.con,pri:r.pri,part:r.part||null,
+   fm:s.fm,tech:s.tech,loggedBy:HELPDESK[r.by],created,history:hist,
+   ll:r.ll?{cat:r.ll.cat,clause:r.ll.clause,agentRef:r.ll.agentRef,status:r.ll.status,reported:created+HOUR,chases:r.ll.chases.map(d=>n-d*DAY)}:null};
+ });
+}
+
+/* ---------- Planned maintenance (annual) ---------- */
+const PPM=[
+ {t:"Emergency lighting monthly test",cat:"elec",m:[1,2,3,4,5,6,7,8,9,10,11,12],d:2,by:"tech",resp:"Tenant"},
+ {t:"Legionella water temperature checks",cat:"water",m:[1,2,3,4,5,6,7,8,9,10,11,12],d:9,by:"tech",resp:"Tenant"},
+ {t:"Fire alarm quarterly service",cat:"fire",m:[1,4,7,10],d:14,by:"Sentinel Fire Protection",resp:"Tenant",stagger:true},
+ {t:"Lift thorough examination (LOLER)",cat:"lifts",m:[3,9],d:17,by:"Apex Lift Services",resp:"Landlord",stagger:true},
+ {t:"Boiler annual service & gas safety cert",cat:"hvac",m:[10],d:5,by:"Atlantic HVAC Services",resp:"Landlord",stagger:true},
+ {t:"AHU filter change",cat:"hvac",m:[2,5,8,11],d:20,by:"Atlantic HVAC Services",resp:"Tenant"},
+ {t:"Fire extinguisher annual service",cat:"fire",m:[6],d:11,by:"Sentinel Fire Protection",resp:"Tenant"},
+ {t:"PAT testing",cat:"elec",m:[1],d:22,by:"tech",resp:"Tenant",stagger:true},
+ {t:"Roof & gutter inspection",cat:"fabric",m:[4,11],d:24,by:"Munster Roofing Ltd",resp:"Landlord"},
+ {t:"Generator load test",cat:"elec",m:[3,6,9,12],d:26,by:"PowerGen Ireland",resp:"Landlord",sites:["HP","QH","EG"]},
+ {t:"External window cleaning",cat:"fabric",m:[3,6,9,12],d:12,by:"ClearView Cleaning",resp:"Landlord"},
+ {t:"Water tank inspection & TVC sampling",cat:"water",m:[5,11],d:16,by:"AquaSafe Water Hygiene",resp:"Tenant",stagger:true},
+ {t:"Fixed wire testing (EICR)",cat:"elec",m:[11],d:18,by:"Kearney Electrical",resp:"Tenant",sites:["SP"],years:[2026]}
+];
+const CATS={fire:"Fire safety",water:"Water hygiene",lifts:"Lifts",hvac:"Heating & HVAC",elec:"Electrical",fabric:"Roof & fabric"};
+const calCache={};
+function ppmFor(y,m){ // m 0-11
+ const k=y+"-"+m; if(calCache[k])return calCache[k];
+ const out=[];
+ PPM.forEach(p=>{
+  if(!p.m.includes(m+1))return; if(p.years&&!p.years.includes(y))return;
+  SITES.forEach((s,si)=>{
+   if(p.sites&&!p.sites.includes(s.id))return;
+   let day=p.d+(p.stagger?si*2:si%3); const dim=new Date(y,m+1,0).getDate(); if(day>dim)day=dim-((day-dim)%5);
+   let dt=new Date(y,m,day); const w=dt.getDay(); if(w===6)dt=new Date(y,m,day+2>dim?day-1:day+2); if(w===0)dt=new Date(y,m,day+1>dim?day-2:day+1);
+   out.push({t:p.t,cat:p.cat,site:s.id,date:dt,by:p.by==="tech"?TECHS[s.tech].name+" (technician)":p.by,resp:p.resp});
+  });
+ });
+ return calCache[k]=out;
+}
+
+/* ---------- State ---------- */
+const KEY="bmh-alpha-v1";
+const blankF=()=>({stage:[],county:[],site:[],fm:[],ch:[],tech:[],resp:[],con:[],age:[]});
+let S;
+function load(){
+ let saved=null; try{saved=JSON.parse(localStorage.getItem(KEY)||"null")}catch(e){}
+ const t=new Date();
+ S=Object.assign({jobs:seed(),role:"fm",tech:"t1",f:blankF(),stageF:null,hdTab:"requests",sortNew:true,
+   calY:t.getFullYear(),calM:t.getMonth(),calD:t.getDate(),docCat:"All",docSite:"All",llSite:"All",calSite:"All",calCat:[],calWho:"all",llKpi:"all",llCat:[],showDone:false},saved||{});
+ S.f=Object.assign(blankF(),S.f||{});
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const job=id=>S.jobs.find(j=>j.id===id);
+
+/* ---------- Common bits ---------- */
+const stage=id=>STAGES[SIDX[id]];
+function pill(st){const s=stage(st);return `<span class="pill st-${s.id}">${ic(s.i)}${s.l}</span>`}
+function prog(j){
+ const reached=new Set(j.history.map(h=>h.s)); const cur=SIDX[j.stage];
+ return `<div class="prog st-${j.stage}" aria-label="Progress: ${stage(j.stage).l}">`+STAGES.map((s,i)=>{
+  let c=""; if(i<=cur) c=reached.has(s.id)?"on":"skip"; return `<i class="${c}"></i>`}).join("")+`</div>`;
+}
+function ageCls(j){if(j.stage==="complete")return"";const d=ageDays(j.created);return d>14?"bad":d>7?"warn":""}
+function nextActs(j){
+ const t=first(TECHS[j.tech].name);
+ switch(j.stage){
+  case"new":return[["assigned","Assign "+t]];
+  case"assigned":return[["progress","Start work"],["part","Part needed",1]];
+  case"part":return[["progress","Part in · start"]];
+  case"progress":return[["complete","Mark complete"]];
+  default:return[];
+ }
+}
+function actBtns(j){
+ const a=nextActs(j);
+ if(!a.length){const h=j.history[j.history.length-1];return `<span class="done-note">${ic("check")}Done ${fDate(h.at)}</span>`}
+ return a.map(([to,l,alt])=>`<button class="adv st-${to}${alt?" alt":""}" data-act="adv" data-id="${j.id}" data-to="${to}">${ic(stage(to).i)}${esc(l)}</button>`).join("");
+}
+function jobCard(j,opts={}){
+ const s=site(j.site), ch=CHANNELS[j.ch], tn=TECHS[j.tech].name;
+ return `<article class="job">
+  <button class="job-main" data-act="open" data-id="${j.id}" aria-label="Open ${j.id}">
+   <div class="job-top">${pill(j.stage)}<span class="ref">${j.id}</span><span class="sample">Sample</span>
+    <span class="age ${ageCls(j)}">${ic("clock")}${ageTxt(j.created)}</span></div>
+   <h3>${esc(j.title)}</h3>
+   <div class="where">${ic("pin")}<span><b>${esc(s.name)}</b>, ${esc(s.area)} · ${esc(j.loc)}</span></div>
+   ${opts.detail?`<div style="font-size:.95rem">${esc(j.detail)}</div>`:""}
+   <div class="tags">
+    ${j.pri==="Urgent"?`<span class="tag urgent">${ic("bell")}Urgent</span>`:j.pri==="High"?`<span class="tag urgent">High priority</span>`:""}
+    <span class="tag">${ic(ch.i)}${ch.l}</span>
+    <span class="tag ${j.resp==="Landlord"?"ll":""}">${ic(j.resp==="Landlord"?"key":"building")}${j.resp}</span>
+    ${j.con?`<span class="tag con">${ic("hardhat")}Contractor: ${esc(j.con)}</span>`:`<span class="tag">${ic("hardhat")}In-house</span>`}
+    ${j.stage==="part"&&j.part?`<span class="tag">${ic("box")}${esc(j.part)}</span>`:""}
+   </div>
+   ${prog(j)}
+  </button>
+  <div class="job-foot">
+   <div class="tech"><span class="av sm">${initials(tn)}</span><span><b>${esc(tn)}</b><small>FM: ${esc(FMS[j.fm])}</small></span></div>
+   <div class="acts">${actBtns(j)}</div>
+  </div></article>`;
+}
+
+/* ---------- Filters ---------- */
+function filtered(ignoreStage){
+ const f=S.f;
+ return S.jobs.filter(j=>{
+  if(!ignoreStage&&f.stage.length&&!f.stage.includes(j.stage))return false;
+  if(f.con.length&&!f.con.some(c=>c==="yes"?!!j.con:c==="no"?!j.con:j.con===c))return false;
+  if(f.county.length&&!f.county.includes(site(j.site).county))return false;
+  if(f.site.length&&!f.site.includes(j.site))return false;
+  if(f.fm.length&&!f.fm.includes(j.fm))return false;
+  if(f.ch.length&&!f.ch.includes(j.ch))return false;
+  if(f.tech.length&&!f.tech.includes(j.tech))return false;
+  if(f.resp.length&&!f.resp.includes(j.resp))return false;
+  if(f.age.length){const d=ageDays(j.created);if(!f.age.some(a=>{const b=AGES.find(x=>x.id===a);return d>=b.min&&d<=b.max}))return false}
+  return true;
+ });
+}
+const fCount=()=>Object.values(S.f).reduce((a,v)=>a+v.length,0);
+const FGROUPS=[
+ {k:"stage",l:"Status",opts:()=>STAGES.map(s=>[s.id,s.l])},
+ {k:"county",l:"Location / county",opts:()=>[...new Set(SITES.map(s=>s.county))].map(c=>[c,"Co. "+c])},
+ {k:"site",l:"Site",opts:()=>SITES.filter(s=>!S.f.county.length||S.f.county.includes(s.county)).map(s=>[s.id,s.name+" · "+s.area])},
+ {k:"fm",l:"Facilities manager",opts:()=>Object.entries(FMS)},
+ {k:"ch",l:"Came in by",opts:()=>Object.entries(CHANNELS).map(([k,v])=>[k,v.l])},
+ {k:"tech",l:"Technician",opts:()=>Object.entries(TECHS).map(([k,v])=>[k,v.name])},
+ {k:"resp",l:"Responsibility",opts:()=>[["Tenant","Tenant"],["Landlord","Landlord"]]},
+ {k:"con",l:"3rd-party contractor",opts:()=>[["yes","Contractor required"],["no","In-house only"],...[...new Set(S.jobs.filter(j=>j.con).map(j=>j.con))].sort().map(c=>[c,c])]},
+ {k:"age",l:"Request age",opts:()=>AGES.map(a=>[a.id,a.l])}
+];
+function fLabel(k,v){const g=FGROUPS.find(g=>g.k===k);const o=g.opts().find(o=>o[0]===v);return o?o[1]:v}
+
+/* ---------- Views ---------- */
+function vHelpdesk(){
+ const list=filtered(true);
+ const counts=Object.fromEntries(STAGES.map(s=>[s.id,list.filter(j=>j.stage===s.id).length]));
+ let shown=filtered();
+ shown=shown.slice().sort((a,b)=>S.sortNew?b.created-a.created:a.created-b.created);
+ const open=list.filter(j=>j.stage!=="complete").length;
+ const fc=fCount();
+ const active=Object.entries(S.f).flatMap(([k,vs])=>vs.map(v=>`<button class="chip rm" aria-pressed="true" data-act="f" data-k="${k}" data-v="${esc(v)}">${esc(fLabel(k,v))}</button>`)).join("");
+ const head=`<div class="vhead"><div><div class="eyebrow">${ORG.name} · 6 sites</div><h2>Helpdesk</h2>
+   <p>${open} open of ${list.length} requests${fc?" matching filters":""}. Tap a stage button to move a job on.</p></div>
+  ${exportBtn("helpdesk")}</div>`;
+ const toolbar=`<div class="toolbar"><button class="btn btn-filter" data-act="filters">${ic("filter")}Filters${fc?`<span class="fcount">${fc}</span>`:""}</button>
+   <button class="btn btn-sort" data-act="sort">${ic("sort")}${S.sortNew?"Newest first":"Oldest first"}</button>
+   <span class="grow"></span>${fc?`<button class="btn btn-ghost" data-act="clearF">Clear all</button>`:""}</div>
+   ${active?`<div class="scroller">${active}</div>`:""}`;
+ const doneN=counts.complete, pct=list.length?Math.round(doneN/list.length*100):0;
+ const tiles=`<div class="tiles pipe"><button class="tile total" data-act="stageAll" aria-pressed="${!S.f.stage.length}" aria-label="Total jobs ${list.length}. Show all statuses">
+   <span class="tl-top">${ic("list")}Total jobs</span><b>${list.length}</b>
+   <span class="tl-sub">${list.length-doneN} open · ${doneN} complete</span>
+   <span class="tl-bar"><i style="width:${pct}%"></i></span></button>`+STAGES.map(s=>`<span class="pchev" aria-hidden="true">${ic("next")}</span><button class="pstep st-${s.id}" data-act="stageF" data-v="${s.id}" aria-pressed="${S.f.stage.includes(s.id)}"><span class="pic2">${ic(s.i)}</span><b>${counts[s.id]}</b><span class="pl">${s.l}</span></button>`).join("")+`</div>`;
+ const crew=`<section class="crew"><div class="crew-h"><span class="eyebrow">Who's on what</span><button class="chip" data-act="nav" data-v="technicians">Technician view ${ic("next")}</button></div>
+  <div class="scroller">`+Object.entries(TECHS).map(([k,t])=>{
+   const js=S.jobs.filter(j=>j.tech===k&&j.stage!=="complete");
+   return `<button class="crewcard" data-act="crew" data-v="${k}"><span class="av">${initials(t.name)}</span><span><span class="who">${esc(t.name)}</span>
+    <span class="what">${esc(site(t.site).name)} · ${js.length} open ${js.map(j=>`<span class="dot st-${j.stage}" title="${j.id}"></span>`).join("")}</span></span></button>`}).join("")+`</div></section>`;
+ const siteBar=`<section class="sitesec"><div class="crew-h"><span class="eyebrow">Go to a site · open jobs</span><span class="scroller">${["All",...new Set(SITES.map(x=>x.county))].map(c=>`<button class="chip cchip" data-act="countyGo" data-v="${c}" aria-pressed="${c==="All"?!S.f.county.length:(S.f.county.length===1&&S.f.county[0]===c)}">${c==="All"?"All counties":ic("pin")+"Co. "+c}</button>`).join("")}</span></div><div class="scroller sitebar">`+["All",...SITES.map(x=>x.id)].map(id=>{
+   if(id!=="All"&&S.f.county.length&&!S.f.county.includes(site(id).county))return "";
+   const on=id==="All"?!S.f.site.length:(S.f.site.length===1&&S.f.site[0]===id);
+   const n=S.jobs.filter(j=>j.stage!=="complete"&&(id==="All"||j.site===id)).length;
+   return `<button class="sitebtn" data-act="siteGo" data-v="${id}" aria-pressed="${on}"><span class="sbic">${ic(id==="All"?"pin":"building")}</span><span class="sbt"><b>${id==="All"?"All sites":esc(site(id).name)}</b><small>${id==="All"?(S.f.county.length?S.f.county.map(c=>"Co. "+c).join(", "):"Ireland"):esc(site(id).area)+(site(id).area.startsWith(site(id).county)?"":", Co. "+esc(site(id).county))}</small></span><span class="sbn">${n}</span></button>`}).join("")+`</div></section>`;
+ return head+tiles+siteBar+crew+toolbar+(shown.length?`<div class="grid">${shown.map(j=>jobCard(j)).join("")}</div>`:`<div class="empty">No requests match these filters. Tap <b>Clear all</b> to see everything.</div>`);
+}
+
+const isTechTask=e=>/technician/.test(e.by);
+const WHO={all:{l:"Tasks this month",i:"calendar"},tech:{l:"By our technicians",i:"wrench"},con:{l:"By contractors",i:"hardhat"},ll:{l:"Landlord responsibility",i:"key"}};
+function whoMatch(e,w){return w==="tech"?isTechTask(e):w==="con"?!isTechTask(e):w==="ll"?e.resp==="Landlord":true}
+function planEvents(y,m,ignoreCat,ignoreWho){
+ return ppmFor(y,m).filter(e=>(S.calSite==="All"||e.site===S.calSite)&&(ignoreCat||!S.calCat.length||S.calCat.includes(e.cat))&&(ignoreWho||whoMatch(e,S.calWho)));
+}
+function whoChips(e){
+ const t=isTechTask(e);
+ return `<span class="whochips"><span class="whochip who-${t?"tech":"con"}">${ic(t?"wrench":"hardhat")}${t?"Our technician":"Contractor"}</span>${e.resp==="Landlord"?`<span class="whochip who-ll">${ic("key")}Landlord</span>`:""}</span>`;
+}
+function vPlanned(){
+ const y=S.calY,m=S.calM, sf=S.calSite;
+ const ev=planEvents(y,m), evAll=planEvents(y,m,true);
+ const mName=new Date(y,m,1).toLocaleDateString("en-IE",{month:"long"});
+ const base=planEvents(y,m,false,true);
+ const cnt={all:base.length,tech:base.filter(isTechTask).length,con:base.filter(e=>!isTechTask(e)).length,ll:base.filter(e=>e.resp==="Landlord").length};
+ return `<div class="vhead"><div><div class="eyebrow">Planned preventive maintenance · annual schedule</div><h2>Planned maintenance</h2>
+   <p>Statutory and routine checks for every site. Tap a day to see what's due, who's doing it and whether it's the landlord's.</p></div>${exportBtn("planned")}</div>
+  <div class="kpis">${Object.entries(WHO).map(([k,w])=>`<button class="kpi who who-${k}" data-act="calWho" data-v="${k}" aria-pressed="${S.calWho===k}"><span class="kic">${ic(w.i)}</span><span class="ktx"><b>${cnt[k]}</b><span>${w.l}</span></span></button>`).join("")}</div>
+  <div class="scroller">${["All",...SITES.map(s=>s.id)].map(x=>`<button class="chip" data-act="calSite" data-v="${x}" aria-pressed="${sf===x}">${x==="All"?"All sites":esc(site(x).name)}</button>`).join("")}</div>
+  <section class="typesum"><div class="crew-h"><span class="eyebrow">${mName} by type · ${sf==="All"?"all sites":esc(site(sf).name)} · tap to filter</span>
+   ${S.calCat.length?`<button class="chip" data-act="calCatClear">Show all types</button>`:""}</div>
+   <div class="typetiles">${Object.keys(CATS).map(c=>{const n=evAll.filter(e=>e.cat===c).length,on=S.calCat.includes(c),dim=S.calCat.length&&!on;
+    return `<button class="ttile cat-${c}${dim?" dim":""}" data-act="calCat" data-v="${c}" aria-pressed="${on}"><span class="pic">${ic(c)}</span><span class="tt"><b>${n}</b><span>${CATS[c]}</span></span><i class="tbar" style="--w:${evAll.length?Math.round(n/evAll.length*100):0}%"></i></button>`}).join("")}</div>
+  </section>
+  ${vCalendar()}`;
+}
+function vCalendar(){
+ const y=S.calY,m=S.calM;
+ const ev=planEvents(y,m);
+ const startDow=(new Date(y,m,1).getDay()+6)%7, dim=new Date(y,m+1,0).getDate();
+ const t=new Date(); const isT=d=>t.getFullYear()===y&&t.getMonth()===m&&t.getDate()===d;
+ const wide=window.matchMedia("(min-width:900px)").matches;
+ let cells="";
+ for(let i=0;i<startDow;i++)cells+=`<div class="cday out"></div>`;
+ for(let d=1;d<=dim;d++){
+  const de=ev.filter(e=>e.date.getDate()===d);
+  const cats=[...new Set(de.map(e=>e.cat))];
+  const bars=de.slice(0,wide?3:4).map(e=>`<span class="bar cat-${e.cat}">${wide?esc(e.site+" · "+CATS[e.cat]):""}</span>`).join("");
+  const more=de.length>(wide?3:4)?`<span class="more">+${de.length-(wide?3:4)}</span>`:"";
+  cells+=`<button class="cday${isT(d)?" today":""}${S.calD===d?" sel":""}" data-act="calD" data-v="${d}" aria-label="${d} — ${de.length} planned tasks"><span class="d">${d}</span><span class="bars">${bars}</span>${more}</button>`;
+ }
+ const rem=(7-((startDow+dim)%7))%7; for(let i=0;i<rem;i++)cells+=`<div class="cday out"></div>`;
+ const mName=new Date(y,m,1).toLocaleDateString("en-IE",{month:"long",year:"numeric"});
+ const sel=ev.filter(e=>e.date.getDate()===S.calD).sort((a,b)=>a.site.localeCompare(b.site));
+ const selDate=new Date(y,m,Math.min(S.calD,dim));
+ return `<div class="cal-wrap"><section class="cal">
+   <div class="cal-h"><button class="iconbtn" data-act="cal" data-v="-1" aria-label="Previous month">${ic("prev")}</button>
+    <h3>${mName}</h3><button class="btn btn-ghost" data-act="cal" data-v="0">Today</button>
+    <button class="iconbtn" data-act="cal" data-v="1" aria-label="Next month">${ic("next")}</button></div>
+   <div class="cal-grid">${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d=>`<div class="cal-dow">${d}</div>`).join("")}${cells}</div>
+  </section>
+  <section class="daylist"><div><div class="eyebrow">${ev.length} task${ev.length===1?"":"s"} this month${S.calSite==="All"?" · all sites":" · "+esc(site(S.calSite).name)}${S.calCat.length?" · "+S.calCat.map(c=>CATS[c]).join(", "):""}</div>
+   <h4>${selDate.toLocaleDateString("en-IE",{weekday:"long",day:"numeric",month:"long"})}</h4></div>
+   ${sel.length?sel.map(e=>`<div class="ppm cat-${e.cat}"><span class="pic">${ic(e.cat)}</span><b>${esc(e.t)}</b>
+     <small>${esc(site(e.site).name)}, ${esc(site(e.site).area)} · ${esc(e.by.replace(" (technician)",""))}</small>${whoChips(e)}</div>`).join("")
+    :`<div class="empty">Nothing planned on this day${S.calCat.length?" for the selected types":""}. Tap another day with coloured bars.</div>`}
+  </section></div>`;
+}
+
+function vTech(){
+ const tk=S.tech, t=TECHS[tk];
+ const mine=S.jobs.filter(j=>j.tech===tk).sort((a,b)=>SIDX[a.stage]-SIDX[b.stage]||a.created-b.created);
+ const open=mine.filter(j=>j.stage!=="complete"), done=mine.filter(j=>j.stage==="complete");
+ const pick=`<div class="scroller">`+Object.entries(TECHS).map(([k,x])=>{
+  const n=S.jobs.filter(j=>j.tech===k&&j.stage!=="complete").length;
+  return `<button class="crewcard" data-act="tech" data-v="${k}" style="${k===tk?"border-color:var(--brand);background:var(--brand-soft)":""}" aria-pressed="${k===tk}">
+   <span class="av">${initials(x.name)}</span><span><span class="who">${esc(x.name)}</span><span class="what">${esc(site(x.site).name)} · ${n} open</span></span></button>`}).join("")+`</div>`;
+ const con=open.filter(j=>j.con).length;
+ return `<div class="vhead"><div><div class="eyebrow">Operations technicians</div><h2>${esc(first(t.name))}'s jobs</h2>
+   <p>${esc(site(t.site).name)}, ${esc(site(t.site).area)} · ${open.length} open · ${con} need a contractor. Tap who you are below.</p></div>${exportBtn("technicians")}</div>
+  ${pick}
+  ${open.length?`<div class="grid">${open.map(j=>jobCard(j,{detail:true})).join("")}</div>`:`<div class="empty">No open jobs assigned. Nice work.</div>`}
+  ${done.length?`<button class="btn btn-ghost" data-act="showDone">${ic("check")}${S.showDone?"Hide":"Show"} completed (${done.length})</button>`:""}
+  ${S.showDone&&done.length?`<div class="grid">${done.map(j=>jobCard(j,{detail:true})).join("")}</div>`:""}`;
+}
+
+const LLCAT={"Lifts":{i:"lifts",c:"lifts"},"Heating & HVAC":{i:"hvac",c:"hvac"},"Roof & fabric":{i:"fabric",c:"fabric"},"Entrances & reception":{i:"key",c:"water"}};
+const LLK={open:{l:"Open with landlord",i:"key",w:"all",f:j=>j.ll.status<3},
+ ack:{l:"Not yet acknowledged",i:"bell",w:"warn",f:j=>j.ll.status===0},
+ chased:{l:"Chased twice or more",i:"phone",w:"con",f:j=>j.ll.status<3&&j.ll.chases.length>=2},
+ old:{l:"Over 14 days",i:"clock",w:"bad",f:j=>j.ll.status<3&&ageDays(j.ll.reported)>14}};
+function vLandlord(){
+ const all=S.jobs.filter(j=>j.ll);
+ const bySite=all.filter(j=>S.llSite==="All"||j.site===S.llSite);
+ const byCat=bySite.filter(j=>!S.llCat.length||S.llCat.includes(j.ll.cat));
+ const kf=j=>S.llKpi==="all"||LLK[S.llKpi].f(j);
+ const list=byCat.filter(kf), typeBase=bySite.filter(kf);
+ const sites=["All",...SITES.filter(s=>all.some(j=>j.site===s.id)).map(s=>s.id)];
+ const cats=Object.keys(LLCAT).filter(c=>list.some(j=>j.ll.cat===c));
+ const card=j=>{
+  const s=site(j.site), d=ageDays(j.ll.reported), last=j.ll.chases.length?j.ll.chases[j.ll.chases.length-1]:null;
+  return `<article class="ll-card">
+   <div class="job-top">${pill(j.stage)}<span class="ref">${j.id}</span><span class="sample">Sample</span><span class="age ${j.ll.status<3?(d>14?"bad":d>7?"warn":""):""}">${ic("clock")}${d} days with landlord</span></div>
+   <h3 style="margin:0;font-size:1.15rem;line-height:1.25">${esc(j.title)}</h3>
+   <div class="where">${ic("pin")}<span><b>${esc(s.name)}</b> · ${esc(j.loc)}</span></div>
+   <dl class="ll-meta">
+    <div><dt>Landlord</dt><dd>${esc(s.landlord)}</dd></div><div><dt>Managing agent</dt><dd>${esc(s.agent)}</dd></div>
+    <div><dt>Agent ref</dt><dd style="font-family:var(--f-mono);font-size:.85rem">${esc(j.ll.agentRef)}</dd></div><div><dt>Contractor</dt><dd>${esc(j.con||"Not yet appointed")}</dd></div>
+    <div><dt>Lease clause</dt><dd>${esc(j.ll.clause)}</dd></div><div><dt>Chased</dt><dd>${j.ll.chases.length}× ${last?"· last "+ageTxt(last).toLowerCase()+(ageDays(last)?" ago":""):""}</dd></div>
+   </dl>
+   <div class="lsteps">${LL_STEPS.map((l,i)=>`<div class="${i<=j.ll.status?"on":""}"><i></i>${l}</div>`).join("")}</div>
+   <div class="acts" style="justify-content:stretch">
+    ${j.ll.status<3?`<button class="btn btn-brand" style="flex:1" data-act="llNext" data-id="${j.id}">${ic("next")}Mark ${LL_STEPS[j.ll.status+1].toLowerCase()}</button>
+    <button class="btn btn-hazard" style="flex:1" data-act="chase" data-id="${j.id}">${ic("bell")}Log a chase</button>`:`<span class="done-note">${ic("check")}Resolved by landlord</span>`}
+    <button class="btn btn-ghost" data-act="open" data-id="${j.id}">Job details</button>
+   </div></article>`;
+ };
+ return `<div class="vhead"><div><div class="eyebrow">Landlord responsibilities</div><h2>Landlord tracker</h2>
+   <p>Lifts, central heating, roof, entrances and common reception areas are repaired by the landlord under each lease. Track what has been reported and chase from here.</p></div>${exportBtn("landlord")}</div>
+  <div class="kpis">${Object.entries(LLK).map(([k,x])=>`<button class="kpi who who-${x.w}" data-act="llKpi" data-v="${k}" aria-pressed="${S.llKpi===k}"><span class="kic">${ic(x.i)}</span><span class="ktx"><b>${byCat.filter(x.f).length}</b><span>${x.l}</span></span></button>`).join("")}</div>
+  <div class="scroller">${sites.map(s=>`<button class="chip" data-act="llSite" data-v="${s}" aria-pressed="${S.llSite===s}">${s==="All"?"All sites":esc(site(s).name)}</button>`).join("")}</div>
+  <section class="typesum"><div class="crew-h"><span class="eyebrow">Type of works · ${S.llSite==="All"?"all sites":esc(site(S.llSite).name)} · tap to filter</span>
+   ${S.llCat.length||S.llKpi!=="all"?`<button class="chip" data-act="llClear">Show everything</button>`:""}</div>
+   <div class="typetiles four">${Object.entries(LLCAT).map(([c,x])=>{const n=typeBase.filter(j=>j.ll.cat===c).length,on=S.llCat.includes(c),dim=S.llCat.length&&!on;
+    return `<button class="ttile cat-${x.c}${dim?" dim":""}" data-act="llCat" data-v="${esc(c)}" aria-pressed="${on}"><span class="pic">${ic(x.i)}</span><span class="tt"><b>${n}</b><span>${esc(c)}</span></span><i class="tbar" style="--w:${typeBase.length?Math.round(n/typeBase.length*100):0}%"></i></button>`}).join("")}</div>
+  </section>
+  ${cats.length?cats.map(c=>`<div class="grp-h cat-${LLCAT[c].c}"><span class="gpic">${ic(LLCAT[c].i)}</span>${esc(c)}</div>
+   <div class="grid">${list.filter(j=>j.ll.cat===c).map(card).join("")}</div>`).join(""):`<div class="empty">No landlord items match. Tap <b>Show everything</b> or pick another site.</div>`}`;
+}
+
+/* ---------- Documents ---------- */
+const DOCS=[
+ {id:"d1",t:"Building O&M Manual · Rev 4",cat:"O&M manuals",site:"HP",ft:"pdf",v:"4.0",up:"2026-08-14",own:"Siobhán Kelly",rev:"2027-08-14",acc:"ops",sz:"48 MB",note:"Full mechanical, electrical and fabric O&M for the 2019 fit-out, incl. as-built schedules."},
+ {id:"d2",t:"VRV air conditioning O&M",cat:"O&M manuals",site:"SP",ft:"pdf",v:"2.1",up:"2026-03-02",own:"Conor Walsh",rev:"2027-03-02",acc:"ops",sz:"12 MB",note:"Outdoor and indoor unit schedule, controller settings, fault codes."},
+ {id:"d3",t:"Passenger lifts O&M and wiring diagrams",cat:"O&M manuals",site:"QH",ft:"pdf",v:"1.3",up:"2025-11-20",own:"Aoife Murphy",rev:"2026-11-20",acc:"ops",sz:"22 MB",note:"Landlord-supplied. Read only; works by landlord's lift contractor."},
+ {id:"d4",t:"Fire detection & alarm system O&M",cat:"O&M manuals",site:"EG",ft:"pdf",v:"3.0",up:"2026-05-11",own:"Niamh Brennan",rev:"2027-05-11",acc:"ops",sz:"9 MB",note:"Panel zone chart, cause & effect matrix, device schedule (I.S. 3218)."},
+ {id:"d5",t:"Group Safety Statement 2026",cat:"Health & safety",site:"All",ft:"pdf",v:"2026.1",up:"2026-01-15",own:"Head of FM",rev:"2027-01-15",acc:"all",sz:"1.2 MB",note:"Safety, Health and Welfare at Work Act 2005 safety statement for all six sites."},
+ {id:"d6",t:"Fire safety register & evacuation plan",cat:"Health & safety",site:"All",ft:"pdf",v:"5.2",up:"2026-09-01",own:"Head of FM",rev:"2027-03-01",acc:"all",sz:"3.4 MB",note:"Fire wardens, assembly points, drill log and PEEP process per site."},
+ {id:"d7",t:"Permit to work procedure (hot works, height, confined space)",cat:"Health & safety",site:"All",ft:"docx",v:"3.1",up:"2026-02-20",own:"Head of FM",rev:"2026-08-20",acc:"ops",sz:"640 KB",note:"Includes permit templates and isolation lock-out tag-out steps."},
+ {id:"d8",t:"Asbestos register & management plan",cat:"Health & safety",site:"MQ",ft:"pdf",v:"2.0",up:"2025-07-08",own:"Gráinne Power",rev:"2026-07-08",acc:"ops",sz:"5.1 MB",note:"Refurbishment & demolition survey findings, locations in risers 2 and 3."},
+ {id:"d9",t:"Legionella risk assessment",cat:"Health & safety",site:"RV",ft:"pdf",v:"1.4",up:"2026-04-03",own:"Declan Ryan",rev:"2028-04-03",acc:"ops",sz:"2.8 MB",note:"Written scheme, schematic, monthly monitoring regime."},
+ {id:"d10",t:"Accident & incident log 2026",cat:"Health & safety",site:"All",ft:"xlsx",v:"Live",up:"2026-10-27",own:"Head of FM",rev:"2026-12-31",acc:"fm",sz:"210 KB",note:"Contains personal data (GDPR). HSA-reportable incidents flagged."},
+ {id:"d11",t:"Lease & licence agreements",cat:"Leases & legal",site:"HP",ft:"pdf",v:"Executed",up:"2024-06-30",own:"Siobhán Kelly",rev:"2029-06-30",acc:"fm",sz:"6.6 MB",note:"25-year FRI lease. Repairing covenants schedule 3. Break option 2034."},
+ {id:"d12",t:"Rent review memo & dilapidations schedule",cat:"Leases & legal",site:"SP",ft:"docx",v:"1.0",up:"2026-09-18",own:"Head of FM",rev:"2027-01-31",acc:"head",sz:"380 KB",note:"Commercially sensitive. Rent review negotiation position."},
+ {id:"d13",t:"Service charge budget 2026/27",cat:"Leases & legal",site:"All",ft:"xlsx",v:"Draft 2",up:"2026-10-02",own:"Head of FM",rev:"2026-12-01",acc:"fm",sz:"420 KB",note:"Landlord service charge apportionment across all sites."},
+ {id:"d14",t:"Floor plans · Levels 0–6",cat:"Floor plans",site:"HP",ft:"pdf",v:"2026-07",up:"2026-07-22",own:"Siobhán Kelly",rev:"2027-07-22",acc:"all",sz:"8.9 MB",note:"Desk numbering, meeting rooms, first aid and AED locations."},
+ {id:"d15",t:"Fire escape & assembly plan",cat:"Floor plans",site:"QH",ft:"pdf",v:"3.0",up:"2026-01-10",own:"Aoife Murphy",rev:"2027-01-10",acc:"all",sz:"1.6 MB",note:"Displayed at each stair core. Assembly point: Lapps Quay boardwalk."},
+ {id:"d16",t:"Mechanical & electrical as-built drawings",cat:"Floor plans",site:"EG",ft:"dwg",v:"Rev C",up:"2025-12-04",own:"Niamh Brennan",rev:"2026-12-04",acc:"ops",sz:"64 MB",note:"Distribution boards, risers, valves and isolation points."},
+ {id:"d17",t:"Approved contractor list & induction checklist",cat:"Contracts & suppliers",site:"All",ft:"xlsx",v:"Oct 26",up:"2026-10-05",own:"Head of FM",rev:"2027-01-05",acc:"all",sz:"95 KB",note:"Insurance expiry dates, Safe Pass and RAMS status per contractor."},
+ {id:"d18",t:"Lift maintenance contract · Apex Lift Services",cat:"Contracts & suppliers",site:"All",ft:"pdf",v:"Signed",up:"2025-04-01",own:"Head of FM",rev:"2027-03-31",acc:"fm",sz:"1.1 MB",note:"Rates, call-out SLAs (4h urgent) and penalties."},
+ {id:"d19",t:"Cleaning services SLA",cat:"Contracts & suppliers",site:"All",ft:"pdf",v:"2.0",up:"2026-01-01",own:"Head of FM",rev:"2026-12-31",acc:"fm",sz:"900 KB",note:"KPIs, audit scoring and monthly review pack."},
+ {id:"d20",t:"Fire Safety Certificate & compliance pack",cat:"Compliance certificates",site:"MQ",ft:"pdf",v:"FSC/2019/114",up:"2026-06-19",own:"Gráinne Power",rev:"2027-06-19",acc:"all",sz:"4.2 MB",note:"FSC, DAC, commencement notice and certificate of compliance on completion."},
+ {id:"d21",t:"Gas safety & boiler service certificates",cat:"Compliance certificates",site:"SP",ft:"pdf",v:"2025",up:"2025-10-09",own:"Conor Walsh",rev:"2026-10-09",acc:"ops",sz:"700 KB",note:"Annual service due · see planned maintenance calendar."},
+ {id:"d22",t:"LOLER thorough examination reports",cat:"Compliance certificates",site:"HP",ft:"pdf",v:"Mar 26",up:"2026-03-24",own:"Siobhán Kelly",rev:"2026-09-24",acc:"ops",sz:"1.9 MB",note:"Six-monthly reports for Lifts 1 and 2."},
+ {id:"d23",t:"Emergency contacts & out-of-hours rota",cat:"Emergency & security",site:"All",ft:"pdf",v:"Wk 44",up:"2026-10-26",own:"Head of FM",rev:"2026-11-02",acc:"all",sz:"150 KB",note:"On-call FM and technician for each site, utility emergency numbers."},
+ {id:"d24",t:"Access control, alarm codes & key register",cat:"Emergency & security",site:"All",ft:"xlsx",v:"Live",up:"2026-10-20",own:"Head of FM",rev:"2026-11-20",acc:"head",sz:"60 KB",note:"Security sensitive. Do not print or forward."}
+];
+const DOC_CATS=["All",...new Set(DOCS.map(d=>d.cat))];
+const canSee=d=>ROLES[S.role].acc.includes(d.acc);
+const todayISO=new Date().toISOString().slice(0,10);
+function vDocs(){
+ const list=DOCS.filter(d=>(S.docCat==="All"||d.cat===S.docCat)&&(S.docSite==="All"||d.site===S.docSite||d.site==="All"));
+ list.sort((a,b)=>(canSee(b)-canSee(a))||b.up.localeCompare(a.up));
+ const locked=DOCS.filter(d=>!canSee(d)).length;
+ return `<div class="vhead"><div><div class="eyebrow">Single source of truth</div><h2>Documents</h2>
+   <p>Latest approved version of each document. Older versions are kept in the history, so nobody works from an attachment in their inbox.</p></div>${exportBtn("documents")}</div>
+  <div class="rolebar">${ic("shield")}<span class="grow">Viewing as <b>${ROLES[S.role].l}</b>. ${locked?`${locked} restricted document${locked>1?"s are":" is"} locked for this role.`:"You can open every document."}</span>
+   <button class="btn btn-ghost" data-act="role">Change role</button></div>
+  <div class="scroller">${DOC_CATS.map(c=>`<button class="chip" data-act="docCat" data-v="${esc(c)}" aria-pressed="${S.docCat===c}">${esc(c)} <span class="n">${c==="All"?DOCS.length:DOCS.filter(d=>d.cat===c).length}</span></button>`).join("")}</div>
+  <div class="scroller">${["All",...SITES.map(s=>s.id)].map(s=>`<button class="chip" data-act="docSite" data-v="${s}" aria-pressed="${S.docSite===s}">${s==="All"?"All sites":esc(site(s).name)}</button>`).join("")}</div>
+  <div class="doclist">${list.map(d=>{const ok=canSee(d),od=d.rev<todayISO;
+   return `<button class="doc${ok?"":" locked"}" data-act="doc" data-v="${d.id}"><span class="ftype ft-${d.ft}">${d.ft.toUpperCase()}</span>
+    <span style="min-width:0"><b>${esc(d.t)}</b><span class="dm"><span>${d.site==="All"?"All sites":esc(site(d.site).name)}</span><span>v${esc(d.v)}</span><span>Updated ${fDate(Date.parse(d.up))}</span>${od?`<span class="overdue">Review overdue</span>`:""}</span></span>
+    <span class="acc acc-${d.acc}">${ic(ok?ACCESS[d.acc].i:"lock")}${ok?ACCESS[d.acc].l:"Locked"}</span></button>`}).join("")||`<div class="empty">No documents in this category for this site.</div>`}</div>`;
+}
+
+/* ---------- Sheets ---------- */
+const sheet=document.getElementById("sheet"), box=document.getElementById("sheetbox");
+let sheetKind=null;
+function openSheet(title,body,kind){sheetKind=kind||null;box.innerHTML=`<div class="sheet-h"><h3>${title}</h3><button class="iconbtn" data-act="close" aria-label="Close">${ic("close")}</button></div><div class="sheet-b">${body}</div>`;sheet.hidden=false;box.scrollTop=0}
+function closeSheet(){sheet.hidden=true;sheetKind=null}
+sheet.addEventListener("click",e=>{if(e.target===sheet)closeSheet()});
+
+function sheetJob(id){
+ const j=job(id),s=site(j.site),reached={};j.history.forEach(h=>reached[h.s]=h.at);const cur=SIDX[j.stage];
+ const tl=STAGES.map((st,i)=>{const on=reached[st.id]!=null, skip=!on&&i<cur;
+  return `<div class="tl-i st-${st.id} ${on?"on":""} ${skip?"skip":""}"><span class="c">${ic(st.i)}</span><span><b>${st.l}</b><small>${on?fDT(reached[st.id]):skip?"Skipped · no part needed":"Not yet"}</small></span></div>`}).join("");
+ const techChips=Object.entries(TECHS).map(([k,t])=>`<button class="chip" data-act="reassign" data-id="${j.id}" data-v="${k}" aria-pressed="${j.tech===k}">${esc(t.name)}</button>`).join("");
+ openSheet(`<span class="ref" style="display:block;font-size:.8rem">${j.id} · Sample data</span>${esc(j.title)}`,`
+  <div class="row">${pill(j.stage)}<span class="age ${ageCls(j)}" style="margin:0">${ic("clock")}Logged ${ageTxt(j.created).toLowerCase()}${ageDays(j.created)?" ago":""}</span></div>
+  <div class="acts" style="justify-content:flex-start">${actBtns(j)}${j.history.length>1?`<button class="btn btn-ghost" data-act="back" data-id="${j.id}">${ic("undo")}Move back a stage</button>`:""}</div>
+  <p style="margin:0">${esc(j.detail)}</p>
+  <dl class="kv">
+   <div><dt>Site</dt><dd>${esc(s.name)}, ${esc(s.area)}</dd></div><div><dt>Location / floor</dt><dd>${esc(j.loc)}</dd></div>
+   <div><dt>Came in by</dt><dd>${CHANNELS[j.ch].l} · logged by ${esc(j.loggedBy)}</dd></div><div><dt>Facilities manager</dt><dd>${esc(FMS[j.fm])}</dd></div>
+   <div><dt>Responsibility</dt><dd>${j.resp}${j.resp==="Landlord"?" · "+esc(s.landlord):""}</dd></div><div><dt>3rd-party contractor</dt><dd>${j.con?"Yes · "+esc(j.con):"No · in-house"}</dd></div>
+   <div><dt>Priority</dt><dd>${j.pri}</dd></div>${j.part?`<div><dt>Part</dt><dd>${esc(j.part)}</dd></div>`:""}
+  </dl>
+  <div><div class="eyebrow" style="margin-bottom:10px">Progress timeline</div><div class="tl">${tl}</div></div>
+  <div class="fgroup"><div class="eyebrow">Technician on this job</div><div class="chips">${techChips}</div></div>`,"job:"+id);
+}
+function sheetFilters(){
+ const n=filtered().length;
+ openSheet("Filter requests",FGROUPS.map(g=>`<div class="fgroup"><div class="eyebrow">${g.l}</div><div class="chips">${g.opts().map(([v,l])=>`<button class="chip${g.k==="stage"?" schip st-"+v:""}" data-act="f" data-k="${g.k}" data-v="${esc(v)}" aria-pressed="${S.f[g.k].includes(v)}">${g.k==="stage"?ic(stage(v).i):g.k==="con"&&v!=="no"?ic("hardhat"):g.k==="county"?ic("pin"):""}${esc(l)}</button>`).join("")}</div></div>`).join("")+
+  `<div class="row"><button class="btn btn-ghost" data-act="clearF">Clear all</button><button class="btn btn-brand" style="flex:1" data-act="close">Show ${n} request${n===1?"":"s"}</button></div>`,"filters");
+}
+function sheetRole(confirmReset){
+ openSheet("Who's using the app?",Object.entries(ROLES).map(([k,r])=>`<button class="roleopt" data-act="setRole" data-v="${k}" aria-pressed="${S.role===k}"><span class="av">${ic(k==="tech"?"wrench":k==="helpdesk"?"headset":k==="head"?"shield":"building")}</span><span><b>${r.l}</b><small>${r.s}</small></span></button>`).join("")+
+  `<p class="eyebrow" style="margin:6px 0 0">Alpha: role is chosen here. In production this comes from your Microsoft 365 sign-in.</p>
+   ${confirmReset?`<div class="notice lock">${ic("reset")}<span>Reset all 14 sample jobs to their starting state? Your stage changes on this device will be lost.</span></div>
+   <div class="row"><button class="btn btn-ghost" style="flex:1" data-act="role">Keep my changes</button><button class="btn btn-danger" style="flex:1" data-act="resetYes">Reset sample data</button></div>`
+   :`<button class="btn btn-ghost" data-act="reset">${ic("reset")}Reset sample data</button>`}`,"role");
+}
+function sheetDoc(id){
+ const d=DOCS.find(x=>x.id===id), ok=canSee(d), od=d.rev<todayISO;
+ if(!ok){openSheet(esc(d.t),`<div class="notice lock">${ic("lock")}<span>This document is ${ACCESS[d.acc].l.toLowerCase()}. Your role (${ROLES[S.role].l}) can't open it. Ask ${esc(d.own)} for access.</span></div>
+  <dl class="kv"><div><dt>Category</dt><dd>${esc(d.cat)}</dd></div><div><dt>Owner</dt><dd>${esc(d.own)}</dd></div></dl>`);return}
+ const prevV=d.v.match(/^\d+\.\d+$/)?(parseFloat(d.v)-0.1).toFixed(1):"previous";
+ openSheet(esc(d.t),`<div class="row"><span class="ftype ft-${d.ft}">${d.ft.toUpperCase()}</span><span class="acc acc-${d.acc}">${ic(ACCESS[d.acc].i)}${ACCESS[d.acc].l}</span>${od?`<span class="overdue">Review overdue</span>`:""}</div>
+  <p style="margin:0">${esc(d.note)}</p>
+  <dl class="kv"><div><dt>Site</dt><dd>${d.site==="All"?"All sites":esc(site(d.site).name)}</dd></div><div><dt>Category</dt><dd>${esc(d.cat)}</dd></div>
+   <div><dt>Current version</dt><dd>v${esc(d.v)} · ${fDate(Date.parse(d.up))}</dd></div><div><dt>Owner</dt><dd>${esc(d.own)}</dd></div>
+   <div><dt>Next review</dt><dd class="${od?"overdue":""}">${fDate(Date.parse(d.rev))}</dd></div><div><dt>Size</dt><dd>${esc(d.sz)}</dd></div></dl>
+  <div><div class="eyebrow" style="margin-bottom:6px">Version history</div>
+   <div class="tag" style="display:flex;justify-content:space-between">v${esc(d.v)} · current<span>${fDate(Date.parse(d.up))}</span></div>
+   <div class="tag" style="display:flex;justify-content:space-between;margin-top:6px;opacity:.7">v${esc(prevV)} · superseded<span>archived</span></div></div>
+  <div class="notice">${ic("doc")}<span>Sample entry. File storage (e.g. SharePoint) is not connected in this alpha, so the file itself can't be opened yet.</span></div>`);
+}
+
+/* ---------- CSV reports ---------- */
+const exportBtn=ctx=>`<button class="btn btn-ghost exportbtn" data-act="reports" data-v="${ctx}">${ic("download")}Export CSV</button>`;
+const isoD=ts=>{const d=new Date(ts);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+function toCSV(rows){return "\ufeff"+rows.map(r=>r.map(v=>{const t=v==null?"":String(v);return /[",\r\n]/.test(t)?'"'+t.replace(/"/g,'""')+'"':t}).join(",")).join("\r\n")}
+const JOB_HEAD=["Ref","Title","Site","Area","County","Location / floor","Status","Priority","Came in by","Logged by","Logged date","Age (days)","Facilities manager","Technician","Responsibility","3rd-party contractor","Contractor","Part","Last update","Detail","Data"];
+function jobRow(j){const s=site(j.site),last=j.history[j.history.length-1];
+ return [j.id,j.title,s.name,s.area,s.county,j.loc,stage(j.stage).l,j.pri,CHANNELS[j.ch].l,j.loggedBy,isoD(j.created),ageDays(j.created),FMS[j.fm],TECHS[j.tech].name,j.resp,j.con?"Yes":"No",j.con||"",j.part||"",isoD(last.at),j.detail,"Sample"]}
+function rptSites(){
+ const rows=[["Site","Area","Facilities manager","Technician","Total jobs","Open","New","Assigned","Part required","In progress","Complete","Landlord jobs","Contractor jobs","Over 14 days open","Average age of open jobs (days)"]];
+ SITES.forEach(s=>{const js=S.jobs.filter(j=>j.site===s.id),op=js.filter(j=>j.stage!=="complete");
+  rows.push([s.name,s.area,FMS[s.fm],TECHS[s.tech].name,js.length,op.length,...STAGES.map(st=>js.filter(j=>j.stage===st.id).length),js.filter(j=>j.resp==="Landlord").length,js.filter(j=>j.con).length,op.filter(j=>ageDays(j.created)>14).length,op.length?(op.reduce((a,j)=>a+ageDays(j.created),0)/op.length).toFixed(1):"0"])});
+ return rows}
+function rptTechs(){
+ const rows=[["Technician","Site","Open jobs","Assigned","Part required","In progress","Completed","Needing contractor","Oldest open job (days)"]];
+ Object.entries(TECHS).forEach(([k,t])=>{const js=S.jobs.filter(j=>j.tech===k),op=js.filter(j=>j.stage!=="complete");
+  rows.push([t.name,site(t.site).name,op.length,js.filter(j=>j.stage==="assigned").length,js.filter(j=>j.stage==="part").length,js.filter(j=>j.stage==="progress").length,js.filter(j=>j.stage==="complete").length,op.filter(j=>j.con).length,op.length?Math.max(...op.map(j=>ageDays(j.created))):0])});
+ return rows}
+function rptLandlord(){
+ const rows=[["Ref","Title","Site","Type of works","Landlord","Managing agent","Agent ref","Lease clause","Landlord status","Reported to landlord","Days with landlord","Times chased","Last chased","Contractor","Helpdesk status"]];
+ S.jobs.filter(j=>j.ll).forEach(j=>{const s=site(j.site),lc=j.ll.chases[j.ll.chases.length-1];
+  rows.push([j.id,j.title,s.name,j.ll.cat,s.landlord,s.agent,j.ll.agentRef,j.ll.clause,LL_STEPS[j.ll.status],isoD(j.ll.reported),ageDays(j.ll.reported),j.ll.chases.length,lc?isoD(lc):"",j.con||"",stage(j.stage).l])});
+ return rows}
+function rptPlanned(year){
+ const rows=[["Date","Day","Task","Type","Site","Area","Carried out by","Who","Responsibility"]];
+ const months=year?[...Array(12).keys()]:[S.calM], y=S.calY;
+ months.forEach(m=>{(year?ppmFor(y,m):planEvents(y,m)).slice().sort((a,b)=>a.date-b.date).forEach(e=>{const s=site(e.site);
+  rows.push([isoD(e.date),e.date.toLocaleDateString("en-IE",{weekday:"short"}),e.t,CATS[e.cat],s.name,s.area,e.by.replace(" (technician)",""),isTechTask(e)?"Our technician":"Contractor",e.resp])})});
+ return rows}
+function rptDocs(){
+ const rows=[["Title","Category","Site","Format","Version","Last updated","Owner","Next review","Review status","Access level"]];
+ DOCS.filter(canSee).forEach(d=>rows.push([d.t,d.cat,d.site==="All"?"All sites":site(d.site).name,d.ft.toUpperCase(),d.v,d.up,d.own,d.rev,d.rev<todayISO?"Overdue":"In date",ACCESS[d.acc].l]));
+ return rows}
+function reportList(){
+ const mName=new Date(S.calY,S.calM,1).toLocaleDateString("en-IE",{month:"long",year:"numeric"});
+ const fc=fCount();
+ return [
+  {id:"hd-filtered",ctx:"helpdesk",t:"Helpdesk requests"+(fc?" (current filters)":""),d:fc?"Only the requests matching your Helpdesk filters":"Every request with status, age, site, technician and contractor",f:"helpdesk-requests",rows:()=>[JOB_HEAD,...filtered().map(jobRow)]},
+  {id:"hd-open",ctx:"helpdesk",t:"Open requests",d:"Everything not yet complete, oldest first, for the weekly review",f:"open-requests",rows:()=>[JOB_HEAD,...S.jobs.filter(j=>j.stage!=="complete").sort((a,b)=>a.created-b.created).map(jobRow)]},
+  {id:"sites",ctx:"helpdesk",t:"Site summary",d:"Jobs by site and status, landlord and contractor counts, average age",f:"site-summary",rows:rptSites},
+  {id:"techs",ctx:"technicians",t:"Technician workload",d:"Open, in-progress and completed jobs for each technician",f:"technician-workload",rows:rptTechs},
+  {id:"tech-jobs",ctx:"technicians",t:TECHS[S.tech].name+"'s jobs",d:"All jobs assigned to the selected technician",f:"jobs-"+TECHS[S.tech].name.toLowerCase().replace(/[^a-z]+/g,"-"),rows:()=>[JOB_HEAD,...S.jobs.filter(j=>j.tech===S.tech).map(jobRow)]},
+  {id:"landlord",ctx:"landlord",t:"Landlord tracker",d:"Agent references, lease clauses, status, days with landlord and chases",f:"landlord-tracker",rows:rptLandlord},
+  {id:"ppm-month",ctx:"planned",t:"Planned maintenance · "+mName,d:"This month with your site, type and who filters applied",f:"planned-maintenance-"+S.calY+"-"+String(S.calM+1).padStart(2,"0"),rows:()=>rptPlanned(false)},
+  {id:"ppm-year",ctx:"planned",t:"Planned maintenance · full year "+S.calY,d:"The annual schedule for all six sites",f:"planned-maintenance-"+S.calY,rows:()=>rptPlanned(true)},
+  {id:"docs",ctx:"documents",t:"Document register",d:"Versions, owners and review dates for documents your role can see",f:"document-register",rows:rptDocs}
+ ];
+}
+let dlP=null;
+const getDL=()=>dlP||(dlP=(window.claude&&window.claude.use)?Promise.resolve(window.claude.use("downloads")).catch(()=>null):Promise.resolve(null));
+async function saveCSV(filename,text){
+ const dlNS=await getDL();
+ if(dlNS){
+  try{await dlNS.save({filename,data:text});return"saved"}
+  catch(e){return e&&e.code==="declined"?"declined":"failed"}
+ }
+ if(window.claude&&window.claude.use)return"failed";
+ try{const url=URL.createObjectURL(new Blob([text],{type:"text/csv;charset=utf-8"}));const a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);return"saved"}catch(e){return"failed"}
+}
+function sheetReports(ctx){
+ const all=reportList(), mine=all.filter(r=>r.ctx===ctx), rest=all.filter(r=>r.ctx!==ctx);
+ const item=r=>{const n=r.rows().length-1;return `<button class="roleopt rpt" data-act="csv" data-v="${r.id}" data-ctx="${ctx}"><span class="av">${ic("sheet")}</span><span style="flex:1;min-width:0"><b>${esc(r.t)}</b><small>${esc(r.d)} · ${n} row${n===1?"":"s"}</small></span>${ic("download","rdl")}</button>`};
+ openSheet("Export CSV reports",`<p style="margin:0;color:var(--muted)">Each report downloads as a CSV file that opens in Excel or Google Sheets. Rows are marked as sample data.</p>
+  <div class="eyebrow">For this view</div>${mine.map(item).join("")}
+  <div class="eyebrow">Other reports</div>${rest.map(item).join("")}`,"reports:"+ctx);
+}
+
+/* ---------- Actions ---------- */
+let undoSnap=null, toastT=null;
+const toastEl=document.getElementById("toast");
+function toast(msg,undo){toastEl.innerHTML=`<span>${msg}</span>${undo?`<button data-act="undo">${ic("undo")}Undo</button>`:""}`;toastEl.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{toastEl.hidden=true},5000)}
+function snap(j){undoSnap=JSON.parse(JSON.stringify(j))}
+function setStage(id,to){const j=job(id);snap(j);j.stage=to;j.history.push({s:to,at:Date.now()});
+ if(to==="complete"&&j.ll&&j.ll.status<3)j.ll.status=3;
+ save();render();toast(`${j.id} → ${stage(to).l}`,true)}
+function refreshSheet(){if(!sheetKind)return;if(sheetKind.startsWith("job:"))sheetJob(sheetKind.slice(4));else if(sheetKind==="filters")sheetFilters()}
+
+document.addEventListener("click",e=>{
+ const b=e.target.closest("[data-act]"); if(!b)return;
+ const a=b.dataset.act,v=b.dataset.v,id=b.dataset.id;
+ switch(a){
+  case"nav":location.hash=v;break;
+  case"home":closeSheet();if(cur()==="helpdesk"){window.scrollTo({top:0,behavior:"smooth"})}else{location.hash="helpdesk"}break;
+  case"adv":setStage(id,b.dataset.to);refreshSheet();break;
+  case"back":{const j=job(id);if(j.history.length>1){snap(j);j.history.pop();j.stage=j.history[j.history.length-1].s;save();render();refreshSheet();toast(`${j.id} moved back to ${stage(j.stage).l}`,true)}break}
+  case"undo":if(undoSnap){const i=S.jobs.findIndex(j=>j.id===undoSnap.id);S.jobs[i]=undoSnap;undoSnap=null;save();render();refreshSheet();toast("Change undone")}break;
+  case"open":sheetJob(id);break;
+  case"reassign":{const j=job(id);snap(j);j.tech=v;save();render();sheetJob(id);toast(`${j.id} given to ${TECHS[v].name}`,true);break}
+  case"close":closeSheet();break;
+  case"hstat":if(v==="landlord")location.hash="landlord";else{S.f.stage=v==="new"?["new"]:[];save();if(cur()==="helpdesk")render();else location.hash="helpdesk"}break;
+  case"calWho":S.calWho=S.calWho===v?"all":v;save();render();break;
+  case"calSite":S.calSite=v;save();render();break;
+  case"calCat":{const i=S.calCat.indexOf(v);i>=0?S.calCat.splice(i,1):S.calCat.push(v);save();render();break}
+  case"calCatClear":S.calCat=[];save();render();break;
+  case"reports":sheetReports(v);break;
+  case"csv":{const r=reportList().find(x=>x.id===v);if(!r)break;const fn="bmh-"+r.f+"-"+isoD(Date.now())+".csv";
+   toast("Preparing "+r.t+"…");
+   saveCSV(fn,toCSV(r.rows())).then(st=>toast(st==="saved"?"Saved "+fn:st==="declined"?"Download cancelled":"Download isn't available in this view. Open the standalone file to export."));break}
+  case"countyGo":S.f.county=v==="All"?[]:[v];S.f.site=S.f.site.filter(id=>v==="All"||site(id).county===v);save();render();break;
+  case"siteGo":S.f.site=v==="All"?[]:[v];save();render();break;
+  case"stageAll":S.f.stage=[];save();render();break;
+  case"stageF":{const i=S.f.stage.indexOf(v);i>=0?S.f.stage.splice(i,1):S.f.stage.push(v);save();render();break}
+  case"filters":sheetFilters();break;
+  case"f":{const arr=S.f[b.dataset.k];const i=arr.indexOf(v);i>=0?arr.splice(i,1):arr.push(v);save();render();refreshSheet();break}
+  case"clearF":S.f=blankF();save();render();refreshSheet();break;
+  case"sort":S.sortNew=!S.sortNew;save();render();break;
+  case"crew":S.tech=v;save();location.hash="technicians";break;
+  case"tech":S.tech=v;save();render();break;
+  case"showDone":S.showDone=!S.showDone;save();render();break;
+  case"cal":{if(v==="0"){const t=new Date();S.calY=t.getFullYear();S.calM=t.getMonth();S.calD=t.getDate()}else{const d=new Date(S.calY,S.calM+Number(v),1);S.calY=d.getFullYear();S.calM=d.getMonth();S.calD=1}save();render();break}
+  case"calD":S.calD=Number(v);save();render();break;
+  case"llSite":S.llSite=v;save();render();break;
+  case"llKpi":S.llKpi=S.llKpi===v?"all":v;save();render();break;
+  case"llCat":{const i=S.llCat.indexOf(v);i>=0?S.llCat.splice(i,1):S.llCat.push(v);save();render();break}
+  case"llClear":S.llCat=[];S.llKpi="all";save();render();break;
+  case"llNext":{const j=job(id);snap(j);j.ll.status=Math.min(3,j.ll.status+1);save();render();toast(`${j.id}: ${LL_STEPS[j.ll.status]}`,true);break}
+  case"chase":{const j=job(id);snap(j);j.ll.chases.push(Date.now());save();render();toast(`Chase logged with ${site(j.site).agent}`,true);break}
+  case"docCat":S.docCat=v;save();render();break;
+  case"docSite":S.docSite=v;save();render();break;
+  case"doc":sheetDoc(v);break;
+  case"role":sheetRole(false);break;
+  case"reset":sheetRole(true);break;
+  case"resetYes":{const keep={role:S.role};try{localStorage.removeItem(KEY)}catch(err){}load();S.role=keep.role;save();closeSheet();render();toast("Sample data reset");break}
+  case"setRole":S.role=v;save();render();sheetRole(false);break;
+ }
+});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!sheet.hidden)closeSheet()});
+
+/* ---------- Render ---------- */
+const VIEWS={helpdesk:{l:"Helpdesk",i:"headset",f:vHelpdesk},planned:{l:"Planned",i:"calendar",f:vPlanned},technicians:{l:"Technicians",i:"wrench",f:vTech},landlord:{l:"Landlord",i:"key",f:vLandlord},documents:{l:"Documents",i:"doc",f:vDocs}};
+const app=document.getElementById("app"), tabs=document.getElementById("tabs"), roleBtn=document.getElementById("rolebtn"), ind=document.getElementById("tabind");
+let prevBadge={};
+function placeInd(){
+ const a=tabs.querySelector('[aria-current="page"]'); if(!a)return;
+ ind.style.width=a.offsetWidth+"px"; ind.style.transform=`translateX(${a.offsetLeft+tabs.offsetLeft}px)`;
+ if(!ind.classList.contains("ready")){ind.classList.add("ready");requestAnimationFrame(()=>requestAnimationFrame(()=>ind.classList.add("anim")))}
+}
+function cur(){const h=location.hash.slice(1);return VIEWS[h]?h:"helpdesk"}
+function render(){
+ const v=cur();
+ const td=new Date();
+ const badge={planned:ppmFor(td.getFullYear(),td.getMonth()).filter(e=>e.date.getDate()===td.getDate()).length,helpdesk:S.jobs.filter(j=>j.stage==="new").length,landlord:S.jobs.filter(j=>j.ll&&j.ll.status<3).length,technicians:S.jobs.filter(j=>j.tech===S.tech&&j.stage!=="complete").length};
+ tabs.innerHTML=Object.entries(VIEWS).map(([k,x])=>`<button class="tab" data-act="nav" data-v="${k}" ${k===v?'aria-current="page"':""}><span class="tic">${ic(x.i)}</span><span class="lbl">${x.l}</span>${badge[k]?`<span class="badge${prevBadge[k]!=null&&prevBadge[k]!==badge[k]?" pop":""}">${badge[k]}</span>`:""}</button>`).join("");
+ prevBadge=badge; placeInd();
+ const rIcon={tech:"wrench",helpdesk:"headset",head:"shield",fm:"building"}[S.role];
+ roleBtn.innerHTML=`<span class="ravatar">${ic(rIcon)}</span><span class="rtxt"><small>Viewing as</small>${ROLES[S.role].l}</span>${ic("chev","chev")}`;
+ const openN=S.jobs.filter(j=>j.stage!=="complete").length, newN=S.jobs.filter(j=>j.stage==="new").length, llN=badge.landlord||0;
+ document.getElementById("hstats").innerHTML=`<span class="hs date">${ic("calendar")}${td.toLocaleDateString("en-IE",{weekday:"short",day:"numeric",month:"short"})}</span>
+  <button class="hs" data-act="hstat" data-v="open"><span class="dot st-progress"></span><b>${openN}</b>open</button>
+  <button class="hs" data-act="hstat" data-v="new"><span class="dot st-new"></span><b>${newN}</b>new</button>
+  <button class="hs" data-act="hstat" data-v="landlord"><span class="dot" style="background:var(--badge)"></span><b>${llN}</b>with landlord</button>`;
+ roleBtn.setAttribute("aria-label","Viewing as "+ROLES[S.role].l+". Change role");
+ app.innerHTML=VIEWS[v].f();
+}
+let lastView=null;
+window.addEventListener("hashchange",()=>{render();if(lastView!==cur())window.scrollTo(0,0);lastView=cur()});
+let rT;window.addEventListener("resize",()=>{placeInd();clearTimeout(rT);rT=setTimeout(()=>{if(cur()==="planned")render()},200)});
+load();lastView=cur();render();
+getDL().then(n=>{if(!n&&window.claude&&window.claude.use)document.body.classList.add("no-dl")});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(placeInd);
+})();
+</script>
+</body>
+</html>
